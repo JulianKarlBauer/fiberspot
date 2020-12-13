@@ -1,5 +1,5 @@
 import os
-from PIL import Image
+from PIL import Image, ImageOps
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.interpolate
@@ -24,20 +24,22 @@ region.save(
 red, green, blue = region.split()
 luminance = region.copy().convert("L")
 
-array = np.array(luminance)
+inverted = ImageOps.invert(luminance)
+array = np.array(inverted)
 
 ########################################
 # Plot bands
 # Conclusion: Use luminance
 
-if False:
+if True:
     aspect_ratio = array.shape[0] / array.shape[1]
-    fig, axs = plt.subplots(2, 2, figsize=(18, 18 * aspect_ratio))
+    fig, axs = plt.subplots(3, 2, figsize=(2*6, 3*6 * aspect_ratio))
     subplots = {
         "Red": {"image": red, "ax": axs[0, 0]},
         "Green": {"image": green, "ax": axs[0, 1]},
         "Blue": {"image": blue, "ax": axs[1, 0]},
         "Luminance": {"image": luminance, "ax": axs[1, 1]},
+        "Inverted luminance": {"image": inverted, "ax": axs[2, 1]},
     }
 
     for key_sub, data_sub in subplots.items():
