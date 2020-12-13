@@ -108,3 +108,64 @@ if True:
     path_picture = os.path.join(directory, f"fvc")
     plt.savefig(path_picture + ".png")
     plt.tight_layout()
+
+
+def create_circular_mask(h, w, center=None, radius=None):
+
+    if center is None:  # use the middle of the image
+        center = (int(w / 2), int(h / 2))
+    if radius is None:  # use the smallest distance between the center and image walls
+        radius = min(center[0], center[1], w - center[0], h - center[1])
+
+    Y, X = np.ogrid[:h, :w]
+    dist_from_center = np.sqrt((X - center[0]) ** 2 + (Y - center[1]) ** 2)
+
+    mask = dist_from_center <= radius
+    return mask
+
+
+h, w = array.shape[:2]
+
+if True:
+    plt.figure()
+    mask = create_circular_mask(h, w, center=(xx[5, 5], yy[5, 5]), radius=30)
+    plt.imshow(mask)
+    plt.title("Use circular mask")
+    path_picture = os.path.join(directory, f"mask")
+    plt.savefig(path_picture + ".png")
+    plt.tight_layout()
+
+means = np.zeros_like(xx)
+fvcs = np.zeros_like(xx)
+for i in range(10):
+    for j in range(10):
+        mask = create_circular_mask(h, w, center=(xx[i, j], yy[i, j]), radius=30)
+        mean = array[mask].mean()
+        means[i, j] = mean
+        fvcs[i, j] = fvc_map(value=mean)
+
+
+if True:
+    plt.figure()
+    plt.imshow(means)
+    plt.colorbar()
+
+    plt.title("Mean values")
+    path_picture = os.path.join(directory, f"means")
+    plt.savefig(path_picture + ".png")
+    plt.tight_layout()
+
+
+if True:
+    plt.figure()
+    plt.imshow(fvcs)
+    plt.colorbar()
+
+    plt.title("Fiber volume content")
+    path_picture = os.path.join(directory, f"fvcs")
+    plt.savefig(path_picture + ".png")
+    plt.tight_layout()
+
+
+# https://stackoverflow.com/questions/890051/how-do-i-generate-circular-thumbnails-with-pil
+# https://stackoverflow.com/a/44874588/8935243
