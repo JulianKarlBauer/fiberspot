@@ -49,9 +49,27 @@ if False:
     plt.tight_layout()
     plt.close(fig)
 
+########################################
+# Mesh
+n_x, n_y = 10, 10
+l_y, l_x = array.shape
+start_x, start_y = l_x / (2.0 * n_x), l_y / (2.0 * n_y)
+end_x, end_y = l_x - start_x, l_y - start_y
+x = np.linspace(start_x, end_x, n_x)
+y = np.linspace(start_y, end_y, n_y)
+xx, yy = np.meshgrid(x, y)
+
+########################################
+# Plot grid
+if True:
+    plt.figure()
+    plt.imshow(array)
+    plt.scatter(xx, yy, marker="x", c="k")
+    plt.title('Grid points')
+
+    path_picture = os.path.join(directory, f"grid")
     plt.savefig(path_picture + ".png")
-plt.tight_layout()
-plt.close(fig)
+    plt.tight_layout()
 
 ########################################
 #
