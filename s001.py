@@ -2,6 +2,7 @@ import os
 from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy.interpolate
 
 # Bands: R G B alpha
 # Modes: RGB, L
@@ -65,11 +66,45 @@ if True:
     plt.figure()
     plt.imshow(array)
     plt.scatter(xx, yy, marker="x", c="k")
-    plt.title('Grid points')
+    plt.title("Grid points")
 
     path_picture = os.path.join(directory, f"grid")
     plt.savefig(path_picture + ".png")
     plt.tight_layout()
 
 ########################################
-#
+# Local fiber volume content
+
+
+class LocalFiberVolumeContent:
+    def __init__(
+        self, average_value, average_volume_content, neat_value, neat_volume_content=0,
+    ):
+        self.average_value = average_value
+        self.average_volume_content = average_volume_content
+        self.neat_value = neat_value
+        self.neat_volume_content = neat_volume_content
+        x = [neat_value, average_value]
+        y = [neat_volume_content, average_volume_content]
+        self.interpolation = scipy.interpolate.interp1d(x, y, fill_value="extrapolate")
+
+    def __call__(self, value):
+        return self.interpolation(value)
+
+
+fvc_map = LocalFiberVolumeContent(
+    average_value=np.mean(array), average_volume_content=0.27, neat_value=0
+)
+
+if True:
+    plt.figure()
+    x = np.linspace(0, 256, 300)
+    y = fvc_map(value=x)
+    plt.plot(x, y)
+    plt.xlabel("Grey value")
+    plt.ylabel("Fiber volume content")
+    plt.title("Get fiber volume content from grey value")
+
+    path_picture = os.path.join(directory, f"fvc")
+    plt.savefig(path_picture + ".png")
+    plt.tight_layout()
