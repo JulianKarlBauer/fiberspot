@@ -11,7 +11,8 @@ install:
         # - pytest --verbose
     artifacts:
         paths:
-          - export/
+          - plots/
+          - output/
         expire_in: 2 days
 
 
