@@ -136,8 +136,9 @@ if True:
             mask = mask | create_circular_mask(
                 h, w, center=(xx[i, j], yy[i, j]), radius=25
             )
-
-    plt.imshow(mask)
+    tmp = array.copy()
+    tmp[~mask] = 0
+    plt.imshow(tmp)
     plt.title("Use circular mask")
     path_picture = os.path.join(directory, f"mask")
     plt.savefig(path_picture + ".png")
