@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.interpolate
 
-# Bands: R G B alpha
+# Bands: R, G, B, alpha
 # Modes: RGB, L
 
 
@@ -33,7 +33,7 @@ array = np.array(inverted)
 
 if True:
     aspect_ratio = array.shape[0] / array.shape[1]
-    fig, axs = plt.subplots(3, 2, figsize=(2*6, 3*6 * aspect_ratio))
+    fig, axs = plt.subplots(3, 2, figsize=(2 * 6, 3 * 6 * aspect_ratio))
     subplots = {
         "Red": {"image": red, "ax": axs[0, 0]},
         "Green": {"image": green, "ax": axs[0, 1]},
@@ -53,7 +53,7 @@ if True:
     plt.close(fig)
 
 ########################################
-# Mesh
+# Grid
 n_x, n_y = 10, 10
 l_y, l_x = array.shape
 start_x, start_y = l_x / (2.0 * n_x), l_y / (2.0 * n_y)
@@ -130,7 +130,13 @@ h, w = array.shape[:2]
 
 if True:
     plt.figure()
-    mask = create_circular_mask(h, w, center=(xx[5, 5], yy[5, 5]), radius=30)
+    mask = np.full(array.shape, False)
+    for i in range(n_x):
+        for j in range(n_y):
+            mask = mask | create_circular_mask(
+                h, w, center=(xx[i, j], yy[i, j]), radius=25
+            )
+
     plt.imshow(mask)
     plt.title("Use circular mask")
     path_picture = os.path.join(directory, f"mask")
@@ -141,7 +147,7 @@ means = np.zeros_like(xx)
 fvcs = np.zeros_like(xx)
 for i in range(10):
     for j in range(10):
-        mask = create_circular_mask(h, w, center=(xx[i, j], yy[i, j]), radius=30)
+        mask = create_circular_mask(h, w, center=(xx[i, j], yy[i, j]), radius=25)
         mean = array[mask].mean()
         means[i, j] = mean
         fvcs[i, j] = fvc_map(value=mean)
