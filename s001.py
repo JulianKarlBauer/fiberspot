@@ -18,9 +18,11 @@ image = Image.open(path)
 box = (300, 200, 900, 500)
 region = image.crop(box)
 
+os.makedirs("output", exist_ok=True)
 region.save(
     os.path.splitext(os.path.realpath(os.path.join("output", name_image)))[0] + ".tiff"
 )
+
 red, green, blue = region.split()
 luminance = region.copy().convert("L")
 
