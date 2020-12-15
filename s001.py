@@ -37,10 +37,11 @@ if True:
     aspect_ratio = array.shape[0] / array.shape[1]
     fig, axs = plt.subplots(3, 2, figsize=(2 * 6, 3 * 6 * aspect_ratio))
     subplots = {
-        "Red": {"image": red, "ax": axs[0, 0]},
-        "Green": {"image": green, "ax": axs[0, 1]},
-        "Blue": {"image": blue, "ax": axs[1, 0]},
-        "Luminance": {"image": luminance, "ax": axs[1, 1]},
+        "RGB": {"image": region, "ax": axs[0, 0]},
+        "Red": {"image": red, "ax": axs[0, 1]},
+        "Green": {"image": green, "ax": axs[1, 0]},
+        "Blue": {"image": blue, "ax": axs[1, 1]},
+        "Luminance": {"image": luminance, "ax": axs[2, 0]},
         "Inverted luminance": {"image": inverted, "ax": axs[2, 1]},
     }
 
