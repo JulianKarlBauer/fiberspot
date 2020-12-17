@@ -73,9 +73,12 @@ for key_region, region in regions.items():
         for key_sub, data_sub in subplots.items():
             ax = data_sub["ax"]
             data = np.array(data_sub["image"]).flatten()
-            b, bins, patches = ax.hist(data, 255)
-            ax.set_xlim(0, 255)
+            b, bins, patches = ax.hist(data, bins=np.arange(0, 256))
+            ax.set_xlim(0, 256)
+            if True:
+                ax.set_ylim(0, 20e3)
             ax.set_title(key_sub)
+            ax.grid(True)
 
         path_picture = os.path.join(directory, f"modes_histograms_{key_region}")
         plt.savefig(path_picture + ".png")
