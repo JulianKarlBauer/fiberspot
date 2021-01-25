@@ -190,7 +190,7 @@ for key, properties in images.items():
     grid_xx, grid_yy = get_regular_grid_on_image(array=image_array)
 
     # Plot
-    plot_grid(array=image_array, grid_xx=grid_xx, grid_yy=grid_xx)
+    plot_grid(array=image_arrays["specimen"], grid_xx=grid_xx, grid_yy=grid_yy)
 
     ########################################
     # Local fiber volume content
