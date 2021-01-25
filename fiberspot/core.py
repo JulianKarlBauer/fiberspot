@@ -154,25 +154,25 @@ class LocalFiberVolumeContentMap:
         return self.interpolate(value)
 
 
-def get_local_fiber_volume_content(properties):
+def get_local_fiber_volume_content(arguments):
 
-    directory = properties["plot_directory"]
+    directory = arguments["plot_directory"]
     os.makedirs(directory, exist_ok=True)
 
-    plot = properties["plot"]
+    plot = arguments["plot"]
 
     ########################################
     # Load image and reformat
 
     # Load
     raw_images = {
-        key: fiberspot.load_and_convert_image(path=properties[key]["path"])
+        key: fiberspot.load_and_convert_image(path=arguments[key]["path"])
         for key in ["specimen", "neat_resin"]
     }
 
     # Crop
     images = {
-        key: raw.crop(box=properties[key]["box"]) if "box" in properties[key] else raw
+        key: raw.crop(box=arguments[key]["box"]) if "box" in arguments[key] else raw
         for key, raw in raw_images.items()
     }
 
@@ -181,8 +181,8 @@ def get_local_fiber_volume_content(properties):
     # Plot
     if plot:
         fiberspot.plot_bands_of_image(
-            path=properties["specimen"]["path"],
-            box=properties["specimen"]["box"],
+            path=arguments["specimen"]["path"],
+            box=arguments["specimen"]["box"],
             plot_directory=directory,
         )
 
@@ -205,7 +205,7 @@ def get_local_fiber_volume_content(properties):
     # Local fiber volume content
     fvc_map = fiberspot.LocalFiberVolumeContentMap(
         average_grey=np.mean(image_arrays["specimen"]),
-        average_volume_content=properties["average_volume_content_specimen"],
+        average_volume_content=arguments["average_volume_content_specimen"],
         neat_grey=np.mean(image_arrays["neat_resin"]),
     )
 
@@ -216,7 +216,7 @@ def get_local_fiber_volume_content(properties):
     ########################################
     # Create masks and calc local fiber volume content on specific areas
 
-    radius = properties["radius"]
+    radius = arguments["radius"]
     if plot:
         fiberspot.plot_mask(
             array=image_arrays["specimen"],
@@ -250,3 +250,4 @@ def get_local_fiber_volume_content(properties):
             title="Fiber volume content",
             path=os.path.join(directory, "fvcs" + ".png"),
         )
+    return fvcs
