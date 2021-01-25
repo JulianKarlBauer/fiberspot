@@ -135,7 +135,7 @@ def plot_image(image, title, path):
     plt.close(fig)
 
 
-class LocalFiberVolumeContent:
+class LocalFiberVolumeContentMap:
     def __init__(
         self, average_grey, average_volume_content, neat_grey, neat_volume_content=0,
     ):
@@ -147,10 +147,10 @@ class LocalFiberVolumeContent:
         x = [neat_grey, average_grey]
         y = [neat_volume_content, average_volume_content]
 
-        self.interpolation = scipy.interpolate.interp1d(x, y, fill_value="extrapolate")
+        self.interpolate = scipy.interpolate.interp1d(x, y, fill_value="extrapolate")
 
     def __call__(self, value):
-        return self.interpolation(value)
+        return self.interpolate(value)
 
 
 images = {
@@ -206,7 +206,7 @@ for key, properties in images.items():
 
     ########################################
     # Local fiber volume content
-    fvc_map = LocalFiberVolumeContent(
+    fvc_map = LocalFiberVolumeContentMap(
         average_grey=np.mean(image_arrays["specimen"]),
         average_volume_content=0.27,
         neat_grey=0,
