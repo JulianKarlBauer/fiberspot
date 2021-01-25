@@ -19,5 +19,5 @@ arguments = {
     "plot_directory": os.path.join("plots", "example"),
 }
 
-
-result = fiberspot.get_local_fiber_volume_content(arguments=arguments)
+if __name__ == "__main__":
+    result = fiberspot.get_local_fiber_volume_content(arguments=arguments)
