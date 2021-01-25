@@ -45,6 +45,60 @@ def plot_bands_of_image(image):
     plt.close(fig)
 
 
+def get_regular_grid_on_image(array):
+    n_x, n_y = 10, 10
+    l_y, l_x = array.shape
+    start_x, start_y = l_x / (2.0 * n_x), l_y / (2.0 * n_y)
+    end_x, end_y = l_x - start_x, l_y - start_y
+    x = np.linspace(start_x, end_x, n_x)
+    y = np.linspace(start_y, end_y, n_y)
+    xx, yy = np.meshgrid(x, y)
+    return xx, yy
+
+
+def plot_grid(grid_xx, grid_yy):
+    plt.figure()
+    plt.imshow(array)
+    plt.scatter(grid_xx, grid_yy, marker="x", c="k")
+    plt.title("Grid points")
+
+    path_picture = os.path.join(directory, f"grid")
+    plt.savefig(path_picture + ".png")
+    plt.tight_layout()
+
+
+def plot_fiber_volume_content(fvc_map):
+    plt.figure()
+    x = np.linspace(0, 256, 300)
+    y = fvc_map(value=x)
+    plt.plot(x, y)
+    plt.xlabel("Grey value")
+    plt.ylabel("Fiber volume content")
+    plt.title("Get fiber volume content from grey value")
+
+    path_picture = os.path.join(directory, f"fvc")
+    plt.savefig(path_picture + ".png")
+    plt.tight_layout()
+
+
+class LocalFiberVolumeContent:
+    def __init__(
+        self, average_grey, average_volume_content, neat_grey, neat_volume_content=0,
+    ):
+        self.average_grey = average_grey
+        self.average_volume_content = average_volume_content
+        self.neat_grey = neat_grey
+        self.neat_volume_content = neat_volume_content
+
+        x = [neat_grey, average_grey]
+        y = [neat_volume_content, average_volume_content]
+
+        self.interpolation = scipy.interpolate.interp1d(x, y, fill_value="extrapolate")
+
+    def __call__(self, value):
+        return self.interpolation(value)
+
+
 images = {
     "random_fiber_image": {
         "path": os.path.realpath(os.path.join("data", "IMG_9380.JPG")),
@@ -64,6 +118,9 @@ for key, properties in images.items():
     directory = os.path.join("plots", key)
     os.makedirs(directory, exist_ok=True)
 
+    ########################################
+    # Select image and convert
+
     # Load image
     path = properties["path"]
     image = Image.open(path)
@@ -75,84 +132,35 @@ for key, properties in images.items():
     # Convert part of image to useful data type
     array = np.array(ImageOps.invert(region.copy().convert("L")))
 
-    ########################################
-    # Plot bands
+    # Plot
     plot_bands_of_image(image=region)
 
     ########################################
     # Grid
+    grid_xx, grid_yy = get_regular_grid_on_image(array=array)
 
-    def regular_grid_points_on_image(image):
-        pass
-
-    n_x, n_y = 10, 10
-    l_y, l_x = array.shape
-    start_x, start_y = l_x / (2.0 * n_x), l_y / (2.0 * n_y)
-    end_x, end_y = l_x - start_x, l_y - start_y
-    x = np.linspace(start_x, end_x, n_x)
-    y = np.linspace(start_y, end_y, n_y)
-    xx, yy = np.meshgrid(x, y)
-
-    ########################################
-    # Plot grid
-    if True:
-        plt.figure()
-        plt.imshow(array)
-        plt.scatter(xx, yy, marker="x", c="k")
-        plt.title("Grid points")
-
-        path_picture = os.path.join(directory, f"grid")
-        plt.savefig(path_picture + ".png")
-        plt.tight_layout()
+    # Plot
+    plot_grid(grid_xx, grid_yy)
 
     ########################################
     # Local fiber volume content
-
-    class LocalFiberVolumeContent:
-        def __init__(
-            self,
-            average_value,
-            average_volume_content,
-            neat_value,
-            neat_volume_content=0,
-        ):
-            self.average_value = average_value
-            self.average_volume_content = average_volume_content
-            self.neat_value = neat_value
-            self.neat_volume_content = neat_volume_content
-            x = [neat_value, average_value]
-            y = [neat_volume_content, average_volume_content]
-            self.interpolation = scipy.interpolate.interp1d(
-                x, y, fill_value="extrapolate"
-            )
-
-        def __call__(self, value):
-            return self.interpolation(value)
-
     fvc_map = LocalFiberVolumeContent(
-        average_value=np.mean(array), average_volume_content=0.27, neat_value=0
+        average_grey=np.mean(array), average_volume_content=0.27, neat_grey=0
     )
 
-    if True:
-        plt.figure()
-        x = np.linspace(0, 256, 300)
-        y = fvc_map(value=x)
-        plt.plot(x, y)
-        plt.xlabel("Grey value")
-        plt.ylabel("Fiber volume content")
-        plt.title("Get fiber volume content from grey value")
+    # Plot
+    plot_fiber_volume_content(fvc_map)
 
-        path_picture = os.path.join(directory, f"fvc")
-        plt.savefig(path_picture + ".png")
-        plt.tight_layout()
+    ########################################
+    # Create masks and calc local fiber volume content on specific areas
 
     def create_circular_mask(h, w, center=None, radius=None):
 
-        if center is None:  # use the middle of the image
+        if center is None:
+            # use the middle of the image
             center = (int(w / 2), int(h / 2))
-        if (
-            radius is None
-        ):  # use the smallest distance between the center and image walls
+        if radius is None:
+            # use the smallest distance between the center and image walls
             radius = min(center[0], center[1], w - center[0], h - center[1])
 
         Y, X = np.ogrid[:h, :w]
@@ -166,10 +174,10 @@ for key, properties in images.items():
     if True:
         plt.figure()
         mask = np.full(array.shape, False)
-        for i in range(n_x):
-            for j in range(n_y):
+        for i in range(grid_xx.shape[0]):
+            for j in range(grid_xx.shape[1]):
                 mask = mask | create_circular_mask(
-                    h, w, center=(xx[i, j], yy[i, j]), radius=radius
+                    h, w, center=(grid_xx[i, j], grid_yy[i, j]), radius=radius
                 )
         tmp = array.copy()
         tmp[~mask] = 0
@@ -179,12 +187,12 @@ for key, properties in images.items():
         plt.savefig(path_picture + ".png")
         plt.tight_layout()
 
-    means = np.zeros_like(xx)
-    fvcs = np.zeros_like(xx)
+    means = np.zeros_like(grid_xx)
+    fvcs = np.zeros_like(grid_xx)
     for i in range(10):
         for j in range(10):
             mask = create_circular_mask(
-                h, w, center=(xx[i, j], yy[i, j]), radius=radius
+                h, w, center=(grid_xx[i, j], grid_yy[i, j]), radius=radius
             )
             mean = array[mask].mean()
             means[i, j] = mean
