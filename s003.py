@@ -8,20 +8,29 @@ import scipy.interpolate
 # Modes: RGB, L
 
 
-directory = os.path.join("plots", "001")
+directory = os.path.join("plots", "003")
 os.makedirs(directory, exist_ok=True)
 
-name_image = "IMG_9380.JPG"
-path = os.path.realpath(os.path.join("data", name_image))
+path = os.path.realpath(os.path.join("data", "knips_04", "SpecimenAndPureresin.JPG"))
 image = Image.open(path)
 
-box = (300, 200, 900, 500)
+regions = {
+    "specimen": {"box": (1340, 360, 2700, 1700)},
+    "neat_resin": {"box": (3230, 2220, 4650, 3550)},
+}
+
+
+# name_image = "IMG_9380.JPG"
+# path = os.path.realpath(os.path.join("data", name_image))
+# image = Image.open(path)
+
+box = (1340, 360, 2700, 1700)
 region = image.crop(box)
 
-os.makedirs("output", exist_ok=True)
-region.save(
-    os.path.splitext(os.path.realpath(os.path.join("output", name_image)))[0] + ".tiff"
-)
+# os.makedirs("output", exist_ok=True)
+# region.save(
+#     os.path.splitext(os.path.realpath(os.path.join("output", name_image)))[0] + ".tiff"
+# )
 
 red, green, blue = region.split()
 luminance = region.copy().convert("L")
@@ -130,14 +139,14 @@ def create_circular_mask(h, w, center=None, radius=None):
 
 
 h, w = array.shape[:2]
-
+radius = 60
 if True:
     plt.figure()
     mask = np.full(array.shape, False)
     for i in range(n_x):
         for j in range(n_y):
             mask = mask | create_circular_mask(
-                h, w, center=(xx[i, j], yy[i, j]), radius=25
+                h, w, center=(xx[i, j], yy[i, j]), radius=radius
             )
     tmp = array.copy()
     tmp[~mask] = 0
@@ -151,7 +160,7 @@ means = np.zeros_like(xx)
 fvcs = np.zeros_like(xx)
 for i in range(10):
     for j in range(10):
-        mask = create_circular_mask(h, w, center=(xx[i, j], yy[i, j]), radius=25)
+        mask = create_circular_mask(h, w, center=(xx[i, j], yy[i, j]), radius=radius)
         mean = array[mask].mean()
         means[i, j] = mean
         fvcs[i, j] = fvc_map(value=mean)
