@@ -56,7 +56,7 @@ def get_regular_grid_on_image(array):
     return xx, yy
 
 
-def plot_grid(grid_xx, grid_yy):
+def plot_grid(array, grid_xx, grid_yy):
     plt.figure()
     plt.imshow(array)
     plt.scatter(grid_xx, grid_yy, marker="x", c="k")
@@ -90,7 +90,8 @@ def create_single_circular_mask(image_shape_2D, center=None, radius=None):
     return mask
 
 
-def plot_mask(array_shape, grid_shape):
+def plot_mask(array, grid_shape):
+    array_shape = array.shape[:2]
     plt.figure()
     mask = np.full(array_shape, False)
     for i in range(grid_shape[0]):
@@ -162,29 +163,30 @@ for key, properties in images.items():
 
     # Load image
     path = properties["path"]
-    image = Image.open(path)
+    raw_image = Image.open(path)
 
     # Select part of image
     box = properties["box"]
-    region = image.crop(box)
+    region = raw_image.crop(box)
 
     # Convert part of image to useful data type
-    array = np.array(ImageOps.invert(region.copy().convert("L")))
+    image = ImageOps.invert(region.copy().convert("L"))
+    image_array = np.array(image)
 
     # Plot
     plot_bands_of_image(image=region)
 
     ########################################
     # Grid
-    grid_xx, grid_yy = get_regular_grid_on_image(array=array)
+    grid_xx, grid_yy = get_regular_grid_on_image(array=image_array)
 
     # Plot
-    plot_grid(grid_xx, grid_yy)
+    plot_grid(array=image_array, grid_xx=grid_xx, grid_yy=grid_xx)
 
     ########################################
     # Local fiber volume content
     fvc_map = LocalFiberVolumeContent(
-        average_grey=np.mean(array), average_volume_content=0.27, neat_grey=0
+        average_grey=np.mean(image_array), average_volume_content=0.27, neat_grey=0
     )
 
     # Plot
@@ -194,18 +196,18 @@ for key, properties in images.items():
     # Create masks and calc local fiber volume content on specific areas
 
     radius = properties["radius"]
-    plot_mask(array_shape=array.shape, grid_shape=grid_xx.shape)
+    plot_mask(array=image_array, grid_shape=grid_xx.shape)
 
     means = np.zeros_like(grid_xx)
     fvcs = np.zeros_like(grid_xx)
     for i in range(10):
         for j in range(10):
             mask = create_single_circular_mask(
-                image_shape_2D=array.shape[:2],
+                image_shape_2D=image_array.shape[:2],
                 center=(grid_xx[i, j], grid_yy[i, j]),
                 radius=radius,
             )
-            mean = array[mask].mean()
+            mean = image_array[mask].mean()
             means[i, j] = mean
             fvcs[i, j] = fvc_map(value=mean)
 
