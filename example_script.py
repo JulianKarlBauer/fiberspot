@@ -5,15 +5,15 @@ import os
 import fiberspot
 
 
-images = {
+todo = {
     "example": {
         "specimen": {
             "path": os.path.realpath(os.path.join("data", "example.JPG")),
-            "box": (1340, 360, 2700, 1700),
+            "box": (1340, 360, 2700, 1700),  # Optional cropping
         },
         "neat_resin": {
             "path": os.path.realpath(os.path.join("data", "example.JPG")),
-            "box": (3230, 2220, 4650, 3550),
+            "box": (3230, 2220, 4650, 3550),  # Optional cropping
         },
         "radius": 60,
         "average_volume_content_specimen": 0.27,
@@ -22,5 +22,5 @@ images = {
     },
 }
 
-
-fiberspot.get_local_fiber_volume_content(properties=images["example"])
+for key, task in todo.items():
+    fiberspot.get_local_fiber_volume_content(properties=task)
