@@ -68,7 +68,7 @@ def get_regular_grid_on_image(array):
 
 
 def plot_grid(array, grid_xx, grid_yy):
-    plt.figure()
+    fig = plt.figure()
     plt.imshow(array)
     plt.scatter(grid_xx, grid_yy, marker="x", c="k")
     plt.title("Grid points")
@@ -76,10 +76,11 @@ def plot_grid(array, grid_xx, grid_yy):
     path_picture = os.path.join(directory, f"grid")
     plt.savefig(path_picture + ".png")
     plt.tight_layout()
+    plt.close(fig)
 
 
 def plot_fiber_volume_content(fvc_map):
-    plt.figure()
+    fig = plt.figure()
     x = np.linspace(0, 256, 300)
     y = fvc_map(value=x)
     plt.plot(x, y)
@@ -90,6 +91,7 @@ def plot_fiber_volume_content(fvc_map):
     path_picture = os.path.join(directory, f"fvc")
     plt.savefig(path_picture + ".png")
     plt.tight_layout()
+    plt.close(fig)
 
 
 def create_single_circular_mask(image_shape_2D, center=None, radius=None):
@@ -103,7 +105,7 @@ def create_single_circular_mask(image_shape_2D, center=None, radius=None):
 
 def plot_mask(array, grid_shape):
     array_shape = array.shape[:2]
-    plt.figure()
+    fig = plt.figure()
     mask = np.full(array_shape, False)
     for i in range(grid_shape[0]):
         for j in range(grid_shape[1]):
@@ -119,6 +121,7 @@ def plot_mask(array, grid_shape):
     path_picture = os.path.join(directory, f"mask")
     plt.savefig(path_picture + ".png")
     plt.tight_layout()
+    plt.close(fig)
 
 
 def plot_image(image, title, path):
