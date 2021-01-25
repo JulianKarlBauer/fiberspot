@@ -27,7 +27,7 @@ setuptools.setup(
     #     ]
     # },
     # include_package_data=True,
-    install_requires=["numpy", "matplotlib", "pillow", "scipy"],
+    install_requires=["numpy", "matplotlib", "pillow", "scipy", "pytest"],
     # extras_require={":python_version>'3.5'": ["natsort", "matplotlib"]},
     classifiers=[
         "Programming Language :: Python :: 3",
