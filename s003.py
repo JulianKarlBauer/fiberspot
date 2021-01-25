@@ -152,14 +152,18 @@ class LocalFiberVolumeContent:
 
 images = {
     "knips_04": {
-        "path_specimen": os.path.realpath(
-            os.path.join("data", "knips_04", "SpecimenAndPureresin.JPG")
-        ),
-        "box_specimen": (1340, 360, 2700, 1700),
-        "path_neat_resin": os.path.realpath(
-            os.path.join("data", "knips_04", "SpecimenAndPureresin.JPG")
-        ),
-        "box_neat_resin": (3230, 2220, 4650, 3550),
+        "specimen": {
+            "path": os.path.realpath(
+                os.path.join("data", "knips_04", "SpecimenAndPureresin.JPG")
+            ),
+            "box": (1340, 360, 2700, 1700),
+        },
+        "neat_resin": {
+            "path": os.path.realpath(
+                os.path.join("data", "knips_04", "SpecimenAndPureresin.JPG")
+            ),
+            "box": (3230, 2220, 4650, 3550),
+        },
         "radius": 60,
     },
 }
@@ -172,22 +176,27 @@ for key, properties in images.items():
     # Select image and convert
 
     # Load
-    raw_image = load_and_convert_image(path=properties["path_specimen"])
+    raw_images = {
+        key: load_and_convert_image(path=properties[key]["path"])
+        for key in ["specimen", "neat_resin"]
+    }
 
     # Select part of image
-    box = properties["box_specimen"]
+    images = {
+        key: raw.crop(properties[key]["box"])
+        for key, raw in raw_images.items()
+    }
 
-    image = raw_image.crop(box)
-    image_array = np.array(image)
+    image_arrays = {key: np.array(image) for key, image in images.items()}
 
     # Plot
     plot_bands_of_image(
-        path=properties["path_specimen"], box=properties["box_specimen"]
+        path=properties['specimen']["path"], box=properties['specimen']["box"]
     )
 
     ########################################
     # Grid
-    grid_xx, grid_yy = get_regular_grid_on_image(array=image_array)
+    grid_xx, grid_yy = get_regular_grid_on_image(array=image_arrays["specimen"])
 
     # Plot
     plot_grid(array=image_arrays["specimen"], grid_xx=grid_xx, grid_yy=grid_yy)
@@ -195,7 +204,9 @@ for key, properties in images.items():
     ########################################
     # Local fiber volume content
     fvc_map = LocalFiberVolumeContent(
-        average_grey=np.mean(image_array), average_volume_content=0.27, neat_grey=0
+        average_grey=np.mean(image_arrays["specimen"]),
+        average_volume_content=0.27,
+        neat_grey=0,
     )
 
     # Plot
@@ -205,18 +216,18 @@ for key, properties in images.items():
     # Create masks and calc local fiber volume content on specific areas
 
     radius = properties["radius"]
-    plot_mask(array=image_array, grid_shape=grid_xx.shape)
+    plot_mask(array=image_arrays["specimen"], grid_shape=grid_xx.shape)
 
     means = np.zeros_like(grid_xx)
     fvcs = np.zeros_like(grid_xx)
     for i in range(10):
         for j in range(10):
             mask = create_single_circular_mask(
-                image_shape_2D=image_array.shape[:2],
+                image_shape_2D=image_arrays["specimen"].shape[:2],
                 center=(grid_xx[i, j], grid_yy[i, j]),
                 radius=radius,
             )
-            mean = image_array[mask].mean()
+            mean = image_arrays["specimen"][mask].mean()
             means[i, j] = mean
             fvcs[i, j] = fvc_map(value=mean)
 
