@@ -12,7 +12,6 @@ install:
     artifacts:
         paths:
           - plots/
-          - output/
         expire_in: 2 days
 
 
