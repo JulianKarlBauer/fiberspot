@@ -81,6 +81,45 @@ def plot_fiber_volume_content(fvc_map):
     plt.tight_layout()
 
 
+def create_single_circular_mask(image_shape_2D, center=None, radius=None):
+    """This is highly inefficient and kind of stupid..."""
+    Y, X = np.ogrid[: image_shape_2D[0], : image_shape_2D[1]]
+    dist_from_center = np.sqrt((X - center[0]) ** 2 + (Y - center[1]) ** 2)
+
+    mask = dist_from_center <= radius
+    return mask
+
+
+def plot_mask(array_shape, grid_shape):
+    plt.figure()
+    mask = np.full(array_shape, False)
+    for i in range(grid_shape[0]):
+        for j in range(grid_shape[1]):
+            mask = mask | create_single_circular_mask(
+                image_shape_2D=array_shape[:2],
+                center=(grid_xx[i, j], grid_yy[i, j]),
+                radius=radius,
+            )
+    tmp = array.copy()
+    tmp[~mask] = 0
+    plt.imshow(tmp)
+    plt.title("Use circular mask")
+    path_picture = os.path.join(directory, f"mask")
+    plt.savefig(path_picture + ".png")
+    plt.tight_layout()
+
+
+def plot_image(image, title, path):
+    fig = plt.figure()
+    plt.imshow(image)
+    plt.colorbar()
+
+    plt.title(title)
+    plt.savefig(path)
+    plt.tight_layout()
+    plt.close(fig)
+
+
 class LocalFiberVolumeContent:
     def __init__(
         self, average_grey, average_volume_content, neat_grey, neat_volume_content=0,
@@ -154,69 +193,30 @@ for key, properties in images.items():
     ########################################
     # Create masks and calc local fiber volume content on specific areas
 
-    def create_circular_mask(h, w, center=None, radius=None):
-
-        if center is None:
-            # use the middle of the image
-            center = (int(w / 2), int(h / 2))
-        if radius is None:
-            # use the smallest distance between the center and image walls
-            radius = min(center[0], center[1], w - center[0], h - center[1])
-
-        Y, X = np.ogrid[:h, :w]
-        dist_from_center = np.sqrt((X - center[0]) ** 2 + (Y - center[1]) ** 2)
-
-        mask = dist_from_center <= radius
-        return mask
-
-    h, w = array.shape[:2]
     radius = properties["radius"]
-    if True:
-        plt.figure()
-        mask = np.full(array.shape, False)
-        for i in range(grid_xx.shape[0]):
-            for j in range(grid_xx.shape[1]):
-                mask = mask | create_circular_mask(
-                    h, w, center=(grid_xx[i, j], grid_yy[i, j]), radius=radius
-                )
-        tmp = array.copy()
-        tmp[~mask] = 0
-        plt.imshow(tmp)
-        plt.title("Use circular mask")
-        path_picture = os.path.join(directory, f"mask")
-        plt.savefig(path_picture + ".png")
-        plt.tight_layout()
+    plot_mask(array_shape=array.shape, grid_shape=grid_xx.shape)
 
     means = np.zeros_like(grid_xx)
     fvcs = np.zeros_like(grid_xx)
     for i in range(10):
         for j in range(10):
-            mask = create_circular_mask(
-                h, w, center=(grid_xx[i, j], grid_yy[i, j]), radius=radius
+            mask = create_single_circular_mask(
+                image_shape_2D=array.shape[:2],
+                center=(grid_xx[i, j], grid_yy[i, j]),
+                radius=radius,
             )
             mean = array[mask].mean()
             means[i, j] = mean
             fvcs[i, j] = fvc_map(value=mean)
 
-    if True:
-        plt.figure()
-        plt.imshow(means)
-        plt.colorbar()
-
-        plt.title("Mean values")
-        path_picture = os.path.join(directory, f"means")
-        plt.savefig(path_picture + ".png")
-        plt.tight_layout()
-
-    if True:
-        plt.figure()
-        plt.imshow(fvcs)
-        plt.colorbar()
-
-        plt.title("Fiber volume content")
-        path_picture = os.path.join(directory, f"fvcs")
-        plt.savefig(path_picture + ".png")
-        plt.tight_layout()
+    plot_image(
+        image=means, title="Mean values", path=os.path.join(directory, "means" + ".png")
+    )
+    plot_image(
+        image=fvcs,
+        title="Fiber volume content",
+        path=os.path.join(directory, "fvcs" + ".png"),
+    )
 
     # https://stackoverflow.com/questions/890051/how-do-i-generate-circular-thumbnails-with-pil
     # https://stackoverflow.com/a/44874588/8935243
