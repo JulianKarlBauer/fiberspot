@@ -6,7 +6,7 @@ install:
     image: "python:3.7"
     script:
         - python setup.py develop
-        - python s001.py
+        - python s003.py
         # - pip install pytest
         # - pytest --verbose
     artifacts:
