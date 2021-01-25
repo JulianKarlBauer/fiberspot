@@ -168,6 +168,7 @@ images = {
             "box": (3230, 2220, 4650, 3550),
         },
         "radius": 60,
+        "average_volume_content_specimen": 0.27,
     },
 }
 
@@ -176,7 +177,7 @@ for key, properties in images.items():
     os.makedirs(directory, exist_ok=True)
 
     ########################################
-    # Select image and convert
+    # Load image and reformat
 
     # Load
     raw_images = {
@@ -184,17 +185,14 @@ for key, properties in images.items():
         for key in ["specimen", "neat_resin"]
     }
 
-    # Select part of image
-    images = {
-        key: raw.crop(properties[key]["box"])
-        for key, raw in raw_images.items()
-    }
+    # Crop
+    images = {key: raw.crop(properties[key]["box"]) for key, raw in raw_images.items()}
 
     image_arrays = {key: np.array(image) for key, image in images.items()}
 
     # Plot
     plot_bands_of_image(
-        path=properties['specimen']["path"], box=properties['specimen']["box"]
+        path=properties["specimen"]["path"], box=properties["specimen"]["box"]
     )
 
     ########################################
@@ -208,8 +206,8 @@ for key, properties in images.items():
     # Local fiber volume content
     fvc_map = LocalFiberVolumeContentMap(
         average_grey=np.mean(image_arrays["specimen"]),
-        average_volume_content=0.27,
-        neat_grey=0,
+        average_volume_content=properties["average_volume_content_specimen"],
+        neat_grey=np.mean(image_arrays["neat_resin"]),
     )
 
     # Plot
