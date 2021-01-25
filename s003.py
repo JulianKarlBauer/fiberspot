@@ -11,14 +11,25 @@ import scipy.interpolate
 # Modes: RGB, L
 
 
-def plot_bands_of_image(image):
+def load_and_convert_image(path):
+    # Load image
+    raw_image = Image.open(path)
+    # Convert part of image to useful data type
+    return ImageOps.invert(raw_image.convert("L"))
+
+
+def plot_bands_of_image(path, box):
     """
     Plot bands
     Conclusion: Use luminance
     """
 
-    red, green, blue = image.split()
-    luminance = image.copy().convert("L")
+    raw_image = Image.open(path)
+
+    region = raw_image.crop(box)
+
+    red, green, blue = region.split()
+    luminance = region.copy().convert("L")
 
     inverted = ImageOps.invert(luminance)
     array = np.array(inverted)
@@ -140,16 +151,15 @@ class LocalFiberVolumeContent:
 
 
 images = {
-    "random_fiber_image": {
-        "path": os.path.realpath(os.path.join("data", "IMG_9380.JPG")),
-        "box": (300, 200, 900, 500),
-        "radius": 25,
-    },
     "knips_04": {
-        "path": os.path.realpath(
+        "path_specimen": os.path.realpath(
             os.path.join("data", "knips_04", "SpecimenAndPureresin.JPG")
         ),
-        "box": (1340, 360, 2700, 1700),
+        "box_specimen": (1340, 360, 2700, 1700),
+        "path_neat_resin": os.path.realpath(
+            os.path.join("data", "knips_04", "SpecimenAndPureresin.JPG")
+        ),
+        "box_neat_resin": (3230, 2220, 4650, 3550),
         "radius": 60,
     },
 }
@@ -161,20 +171,19 @@ for key, properties in images.items():
     ########################################
     # Select image and convert
 
-    # Load image
-    path = properties["path"]
-    raw_image = Image.open(path)
+    # Load
+    raw_image = load_and_convert_image(path=properties["path_specimen"])
 
     # Select part of image
-    box = properties["box"]
-    region = raw_image.crop(box)
+    box = properties["box_specimen"]
 
-    # Convert part of image to useful data type
-    image = ImageOps.invert(region.copy().convert("L"))
+    image = raw_image.crop(box)
     image_array = np.array(image)
 
     # Plot
-    plot_bands_of_image(image=region)
+    plot_bands_of_image(
+        path=properties["path_specimen"], box=properties["box_specimen"]
+    )
 
     ########################################
     # Grid
@@ -219,6 +228,3 @@ for key, properties in images.items():
         title="Fiber volume content",
         path=os.path.join(directory, "fvcs" + ".png"),
     )
-
-    # https://stackoverflow.com/questions/890051/how-do-i-generate-circular-thumbnails-with-pil
-    # https://stackoverflow.com/a/44874588/8935243
