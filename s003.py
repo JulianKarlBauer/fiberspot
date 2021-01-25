@@ -11,6 +11,40 @@ import scipy.interpolate
 # Modes: RGB, L
 
 
+def plot_bands_of_image(image):
+    """
+    Plot bands
+    Conclusion: Use luminance
+    """
+
+    red, green, blue = image.split()
+    luminance = image.copy().convert("L")
+
+    inverted = ImageOps.invert(luminance)
+    array = np.array(inverted)
+
+    aspect_ratio = array.shape[0] / array.shape[1]
+    fig, axs = plt.subplots(3, 2, figsize=(2 * 6, 3 * 6 * aspect_ratio))
+    subplots = {
+        "RGB": {"image": region, "ax": axs[0, 0]},
+        "Red": {"image": red, "ax": axs[0, 1]},
+        "Green": {"image": green, "ax": axs[1, 0]},
+        "Blue": {"image": blue, "ax": axs[1, 1]},
+        "Luminance": {"image": luminance, "ax": axs[2, 0]},
+        "Inverted luminance": {"image": inverted, "ax": axs[2, 1]},
+    }
+
+    for key_sub, data_sub in subplots.items():
+        ax = data_sub["ax"]
+        ax.imshow(data_sub["image"])
+        ax.set_title(key_sub)
+
+    path_picture = os.path.join(directory, f"modes")
+    plt.savefig(path_picture + ".png")
+    plt.tight_layout()
+    plt.close(fig)
+
+
 images = {
     "random_fiber_image": {
         "path": os.path.realpath(os.path.join("data", "IMG_9380.JPG")),
@@ -30,47 +64,27 @@ for key, properties in images.items():
     directory = os.path.join("plots", key)
     os.makedirs(directory, exist_ok=True)
 
+    # Load image
     path = properties["path"]
     image = Image.open(path)
 
+    # Select part of image
     box = properties["box"]
-
     region = image.crop(box)
 
-    red, green, blue = region.split()
-    luminance = region.copy().convert("L")
-
-    inverted = ImageOps.invert(luminance)
-    array = np.array(inverted)
+    # Convert part of image to useful data type
+    array = np.array(ImageOps.invert(region.copy().convert("L")))
 
     ########################################
     # Plot bands
-    # Conclusion: Use luminance
-
-    if True:
-        aspect_ratio = array.shape[0] / array.shape[1]
-        fig, axs = plt.subplots(3, 2, figsize=(2 * 6, 3 * 6 * aspect_ratio))
-        subplots = {
-            "RGB": {"image": region, "ax": axs[0, 0]},
-            "Red": {"image": red, "ax": axs[0, 1]},
-            "Green": {"image": green, "ax": axs[1, 0]},
-            "Blue": {"image": blue, "ax": axs[1, 1]},
-            "Luminance": {"image": luminance, "ax": axs[2, 0]},
-            "Inverted luminance": {"image": inverted, "ax": axs[2, 1]},
-        }
-
-        for key_sub, data_sub in subplots.items():
-            ax = data_sub["ax"]
-            ax.imshow(data_sub["image"])
-            ax.set_title(key_sub)
-
-        path_picture = os.path.join(directory, f"modes")
-        plt.savefig(path_picture + ".png")
-        plt.tight_layout()
-        plt.close(fig)
+    plot_bands_of_image(image=region)
 
     ########################################
     # Grid
+
+    def regular_grid_points_on_image(image):
+        pass
+
     n_x, n_y = 10, 10
     l_y, l_x = array.shape
     start_x, start_y = l_x / (2.0 * n_x), l_y / (2.0 * n_y)
