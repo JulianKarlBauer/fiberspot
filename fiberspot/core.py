@@ -20,11 +20,7 @@ def load_and_convert_image(path):
 
 class LocalFiberVolumeFractionMap:
     def __init__(
-        self,
-        average_grey,
-        average_volume_fraction,
-        neat_grey,
-        neat_volume_fraction=0,
+        self, average_grey, average_volume_fraction, neat_grey, neat_volume_fraction=0,
     ):
         self.average_grey = average_grey
         self.average_volume_fraction = average_volume_fraction
@@ -92,7 +88,10 @@ def get_local_fiber_volume_fraction(arguments):
 
     ########################################
     # Get mask
-    mask = get_mask_for_example_image(image_array=image_arrays["specimen"])
+    if False:
+        mask = get_mask_for_example_image(image_array=image_arrays["specimen"])
+    else:
+        mask = np.full(image_arrays["specimen"].shape, True)
 
     if plot:
         fiberspot.plotting.plot_image(
