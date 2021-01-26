@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.interpolate
 import fiberspot
+from PIL import ImageFilter
 
 
 def load_and_convert_image(path):
@@ -161,8 +162,6 @@ def get_local_fiber_volume_content(arguments):
     # Use filter to calc mean and map mean onto fiber volume content
 
     radius = arguments["radius"]
-
-    from PIL import ImageFilter
 
     available_filters = {
         "box": ImageFilter.BoxBlur(radius=radius),
