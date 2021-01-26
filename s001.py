@@ -128,10 +128,12 @@ def my_filter(array):
 
 
 def normalized_convolution_skimage(img, mask):
+    img = img_as_float(img)
+    mask = img_as_float(mask)
     array = img_as_float(my_filter(img * mask))
     weights = img_as_float(my_filter(mask))
     array /= weights
-    return array
+    return skimage.img_as_ubyte(array)
 
 
 normalized_skimage = normalized_convolution_skimage(img=img, mask=mask)
