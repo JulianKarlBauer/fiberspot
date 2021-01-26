@@ -1,5 +1,6 @@
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![LICENSE](https://black.readthedocs.io/en/stable/_static/license.svg)](https://raw.github.com/nilsmeyerkit/fiberoripy/master/LICENSE)
+![Python package](https://github.com/JulianKarlBauer/fiberspot_private/workflows/Python%20package/badge.svg)
 
 
 # fiberspot
