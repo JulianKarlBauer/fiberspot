@@ -6,11 +6,11 @@ import fiberspot
 
 arguments = {
     "specimen": {
-        "path": os.path.realpath(os.path.join("data", "example.JPG")),
+        "path": os.path.realpath(os.path.join("data", "example.jpg")),
         "box": (1340, 360, 2700, 1700),  # Optional cropping
     },
     "neat_resin": {
-        "path": os.path.realpath(os.path.join("data", "example.JPG")),
+        "path": os.path.realpath(os.path.join("data", "example.jpg")),
         "box": (3230, 2220, 4650, 3550),  # Optional cropping
     },
     "radius": 60,  # pixel
