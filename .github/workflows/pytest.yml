@@ -1,19 +1,16 @@
-# This workflow will install Python dependencies and run tests with a variety of Python versions
 name: Python package
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push]
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
     strategy:
+      # You can use PyPy versions in python-version.
+      # For example, pypy2 and pypy3
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8]
 
     steps:
     - uses: actions/checkout@v2
@@ -21,11 +18,11 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install fiberoripy
+    - name: Install dependencies
       run: |
-        pip install --upgrade pip
-        pip install --upgrade setuptools
-        python setup.py install
+        python -m pip install --upgrade pip
     - name: Test with pytest
       run: |
-        pytest
+        pip install pytest
+        pip install pytest-cov
+        pytest tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
