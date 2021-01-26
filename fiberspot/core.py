@@ -226,8 +226,8 @@ def get_local_fiber_volume_content(arguments):
             plot_directory=directory,
         )
 
-    means = np.zeros_like(grid_xx)
-    fvcs = np.zeros_like(grid_xx)
+    mean_values_inside_masks = np.zeros_like(grid_xx)
+    fvc_inside_masks = np.zeros_like(grid_xx)
     for i in range(10):
         for j in range(10):
             mask = fiberspot.create_single_circular_mask(
@@ -236,18 +236,18 @@ def get_local_fiber_volume_content(arguments):
                 radius=radius,
             )
             mean = image_arrays["specimen"][mask].mean()
-            means[i, j] = mean
-            fvcs[i, j] = fvc_map(value=mean)
+            mean_values_inside_masks[i, j] = mean
+            fvc_inside_masks[i, j] = fvc_map(value=mean)
 
     if plot:
         fiberspot.plot_image(
-            image=means,
+            image=mean_values_inside_masks,
             title="Mean values",
             path=os.path.join(directory, "means" + ".png"),
         )
         fiberspot.plot_image(
-            image=fvcs,
+            image=fvc_inside_masks,
             title="Fiber volume content",
             path=os.path.join(directory, "fvcs" + ".png"),
         )
-    return fvcs
+    return fvc_inside_masks
