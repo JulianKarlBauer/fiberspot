@@ -82,17 +82,28 @@ def get_local_fiber_volume_content(arguments):
     # Define bunch of filters
     radius = arguments["radius"]
 
-    available_filters = {
-        "box": ImageFilter.BoxBlur(radius=radius),
-        "gaussian": ImageFilter.GaussianBlur(radius=radius),
+    available_filter_functions = {
+        "box_PIL": lambda x: getattr(Image.fromarray(x), "filter").__call__(
+            ImageFilter.BoxBlur(radius=radius)
+        ),
+        "gaussian_PIL": lambda x: getattr(Image.fromarray(x), "filter").__call__(
+            ImageFilter.GaussianBlur(radius=radius)
+        ),
+        "mean_disk_skimage": lambda x: skimage.filters.rank.mean(
+            x, skimage.morphology.disk(radius)
+        ),
+        "mean_square_skimage": lambda x: skimage.filters.rank.mean(
+            x, skimage.morphology.square(2 * radius)
+        ),
+        "gaussian_skimage": lambda x: skimage.filters.gaussian(x, sigma=radius),
     }
 
     ########################################
     # Use filter to calc mean
     mean_values = {}
-    for filter_key, filter in available_filters.items():
+    for filter_key, filter_function in available_filter_functions.items():
 
-        mean_values[filter_key] = mean = images["specimen"].filter(filter)
+        mean_values[filter_key] = mean = filter_function(image_arrays["specimen"])
 
         if plot:
             fiberspot.plotting.plot_image(
@@ -104,7 +115,7 @@ def get_local_fiber_volume_content(arguments):
     ########################################
     # Map mean onto fiber volume content
     fiber_volume_content = {}
-    for filter_key, filter in available_filters.items():
+    for filter_key, filter in available_filter_functions.items():
 
         fiber_volume_content[filter_key] = fvc = fvc_map(
             np.array(mean_values[filter_key])
