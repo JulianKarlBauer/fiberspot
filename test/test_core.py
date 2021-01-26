@@ -12,8 +12,8 @@ class Test_Core:
 
         box = arguments["specimen"]["box"]
         box_shape = (box[3] - box[1], box[2] - box[0])
-        for fvc_key, fvc in result["fiber_volume_fraction"].items():
-            assert np.allclose(fvc.shape, box_shape)
+        for fvf_key, fvf in result["fiber_volume_fraction"].items():
+            assert np.allclose(fvf.shape, box_shape)
 
 
 if __name__ == "__main__":

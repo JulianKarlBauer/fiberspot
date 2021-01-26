@@ -99,15 +99,15 @@ def get_local_fiber_volume_fraction(arguments):
         )
 
     ########################################
-    # Local fiber volume content
-    fvc_map = fiberspot.LocalFiberVolumeFractionMap(
+    # Local fiber volume fraction
+    fvf_map = fiberspot.LocalFiberVolumeFractionMap(
         average_grey=np.mean(image_arrays["specimen"]),
         average_volume_fraction=arguments["average_volume_fraction_specimen"],
         neat_grey=np.mean(image_arrays["neat_resin"]),
     )
 
     if plot:
-        fiberspot.plotting.plot_fiber_volume_fraction(fvc_map, plot_directory=directory)
+        fiberspot.plotting.plot_fiber_volume_fraction(fvf_map, plot_directory=directory)
 
     ########################################
     # Define bunch of filters
@@ -146,19 +146,19 @@ def get_local_fiber_volume_fraction(arguments):
             )
 
     ########################################
-    # Map mean onto fiber volume content
+    # Map mean onto fiber volume fraction
     fiber_volume_fraction = {}
     for filter_key, filter in available_filter_functions.items():
 
-        fiber_volume_fraction[filter_key] = fvc = fvc_map(
+        fiber_volume_fraction[filter_key] = fvf = fvf_map(
             np.array(mean_values[filter_key])
         )
 
         if plot:
             fiberspot.plotting.plot_image(
-                image=fvc,
+                image=fvf,
                 title="Fiber volume fraction",
-                path=os.path.join(directory, "fvcs" + "_" + filter_key + ".png"),
+                path=os.path.join(directory, "fvfs" + "_" + filter_key + ".png"),
             )
 
     return {"mean": mean_values, "fiber_volume_fraction": fiber_volume_fraction}
