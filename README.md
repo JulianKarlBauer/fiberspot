@@ -85,3 +85,14 @@ Inverted light intensity, i.e. darkness:
 	```
 
 Note: [Develop vs. install](https://stackoverflow.com/a/19048754/8935243)
+
+## Usage
+See [example script](fiberspot/example_script.py) generating
+
+Gaussian filter with radius 60pixel
+![Fiber volume content as colomap using box filter](doc/fvcs_gaussian.png)
+
+Box mean with radius 60pixel
+![Fiber volume content as colomap using box filter](doc/fvcs_box.png)
+
+
