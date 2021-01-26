@@ -48,7 +48,7 @@ def plot_bands_of_image(path, box, plot_directory):
     plt.close(fig)
 
 
-def plot_fiber_volume_content(fvc_map, plot_directory):
+def plot_fiber_volume_fraction(fvc_map, plot_directory):
     fig = plt.figure()
     x = np.linspace(0, 256, 300)
     y = fvc_map(value=x)
@@ -57,13 +57,17 @@ def plot_fiber_volume_content(fvc_map, plot_directory):
 
     plt.plot(
         fvc_map.average_grey,
-        fvc_map.average_volume_content,
+        fvc_map.average_volume_fraction,
         "rs",
         label="Average over specimen",
         **args,
     )
     plt.plot(
-        fvc_map.neat_grey, fvc_map.neat_volume_content, "go", label="Neat resin", **args
+        fvc_map.neat_grey,
+        fvc_map.neat_volume_fraction,
+        "go",
+        label="Neat resin",
+        **args,
     )
     plt.plot(x, y)
     plt.xlabel("Grey value")

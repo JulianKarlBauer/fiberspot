@@ -20,10 +20,10 @@ arguments = {
         "box": (3230, 2220, 4650, 3550),  # Optional cropping
     },
     "radius": 60,  # pixel
-    "average_volume_content_specimen": 0.27,  # dimensionless
+    "average_volume_fraction_specimen": 0.27,  # dimensionless
     "plot": True,
     "plot_directory": os.path.join("plots", "example"),
 }
 
 if __name__ == "__main__":
-    result = fiberspot.get_local_fiber_volume_content(arguments=arguments)
+    result = fiberspot.get_local_fiber_volume_fraction(arguments=arguments)

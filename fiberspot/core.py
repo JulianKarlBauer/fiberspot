@@ -18,17 +18,21 @@ def load_and_convert_image(path):
     return ImageOps.invert(raw_image.convert("L"))
 
 
-class LocalFiberVolumeContentMap:
+class LocalFiberVolumeFractionMap:
     def __init__(
-        self, average_grey, average_volume_content, neat_grey, neat_volume_content=0,
+        self,
+        average_grey,
+        average_volume_fraction,
+        neat_grey,
+        neat_volume_fraction=0,
     ):
         self.average_grey = average_grey
-        self.average_volume_content = average_volume_content
+        self.average_volume_fraction = average_volume_fraction
         self.neat_grey = neat_grey
-        self.neat_volume_content = neat_volume_content
+        self.neat_volume_fraction = neat_volume_fraction
 
         x = [neat_grey, average_grey]
-        y = [neat_volume_content, average_volume_content]
+        y = [neat_volume_fraction, average_volume_fraction]
 
         self.interpolate = scipy.interpolate.interp1d(x, y, fill_value="extrapolate")
 
@@ -55,7 +59,7 @@ def normalized_convolution_skimage(img, mask, filter_function):
     return skimage.img_as_ubyte(array)
 
 
-def get_local_fiber_volume_content(arguments):
+def get_local_fiber_volume_fraction(arguments):
     plot = arguments["plot"]
 
     if plot:
@@ -99,14 +103,14 @@ def get_local_fiber_volume_content(arguments):
 
     ########################################
     # Local fiber volume content
-    fvc_map = fiberspot.LocalFiberVolumeContentMap(
+    fvc_map = fiberspot.LocalFiberVolumeFractionMap(
         average_grey=np.mean(image_arrays["specimen"]),
-        average_volume_content=arguments["average_volume_content_specimen"],
+        average_volume_fraction=arguments["average_volume_fraction_specimen"],
         neat_grey=np.mean(image_arrays["neat_resin"]),
     )
 
     if plot:
-        fiberspot.plotting.plot_fiber_volume_content(fvc_map, plot_directory=directory)
+        fiberspot.plotting.plot_fiber_volume_fraction(fvc_map, plot_directory=directory)
 
     ########################################
     # Define bunch of filters
@@ -146,10 +150,10 @@ def get_local_fiber_volume_content(arguments):
 
     ########################################
     # Map mean onto fiber volume content
-    fiber_volume_content = {}
+    fiber_volume_fraction = {}
     for filter_key, filter in available_filter_functions.items():
 
-        fiber_volume_content[filter_key] = fvc = fvc_map(
+        fiber_volume_fraction[filter_key] = fvc = fvc_map(
             np.array(mean_values[filter_key])
         )
 
@@ -160,4 +164,4 @@ def get_local_fiber_volume_content(arguments):
                 path=os.path.join(directory, "fvcs" + "_" + filter_key + ".png"),
             )
 
-    return {"mean": mean_values, "fiber_volume_content": fiber_volume_content}
+    return {"mean": mean_values, "fiber_volume_fraction": fiber_volume_fraction}

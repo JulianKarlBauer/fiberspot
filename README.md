@@ -72,7 +72,7 @@ Inverted light intensity, i.e. darkness:
 
 ```
 
-![X-y plot of fiber volume content over grey value with two special point pairs: Average specimen and neat resin](doc/example_fiber_volume_content.png)
+![X-y plot of fiber volume content over grey value with two special point pairs: Average specimen and neat resin](doc/example_fiber_volume_fraction.png)
 
 ## Installation
 
