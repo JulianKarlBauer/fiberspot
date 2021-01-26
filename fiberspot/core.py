@@ -36,6 +36,16 @@ class LocalFiberVolumeContentMap:
         return self.interpolate(value)
 
 
+def get_mask_for_example_image(image_array):
+    image_array = skimage.img_as_float(image_array)
+    critical_value = skimage.filters.threshold_otsu(image_array)
+    mask = image_array <= critical_value
+    mask_morph_closing = skimage.morphology.area_closing(mask, area_threshold=60)
+    return skimage.morphology.opening(
+        mask_morph_closing, selem=skimage.morphology.square(20)
+    )
+
+
 def get_local_fiber_volume_content(arguments):
     plot = arguments["plot"]
 
@@ -65,6 +75,17 @@ def get_local_fiber_volume_content(arguments):
             path=arguments["specimen"]["path"],
             box=arguments["specimen"]["box"],
             plot_directory=directory,
+        )
+
+    ########################################
+    # Get mask
+    mask = get_mask_for_example_image(image_array=image_arrays["specimen"])
+
+    if plot:
+        fiberspot.plotting.plot_image(
+            image=mask,
+            title="Fiber volume content",
+            path=os.path.join(directory, "mask" + ".png"),
         )
 
     ########################################
