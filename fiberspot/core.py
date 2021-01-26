@@ -46,6 +46,15 @@ def get_mask_for_example_image(image_array):
     )
 
 
+def normalized_convolution_skimage(img, mask, filter_function):
+    img = skimage.img_as_float(img)
+    mask = skimage.img_as_float(mask)
+    array = skimage.img_as_float(filter_function(skimage.img_as_ubyte(img * mask)))
+    weights = skimage.img_as_float(filter_function(skimage.img_as_ubyte(mask)))
+    array /= weights
+    return skimage.img_as_ubyte(array)
+
+
 def get_local_fiber_volume_content(arguments):
     plot = arguments["plot"]
 
@@ -124,7 +133,9 @@ def get_local_fiber_volume_content(arguments):
     mean_values = {}
     for filter_key, filter_function in available_filter_functions.items():
 
-        mean_values[filter_key] = mean = filter_function(image_arrays["specimen"])
+        mean_values[filter_key] = mean = normalized_convolution_skimage(
+            img=image_arrays["specimen"], mask=mask, filter_function=filter_function
+        )
 
         if plot:
             fiberspot.plotting.plot_image(
