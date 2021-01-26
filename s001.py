@@ -11,6 +11,39 @@ import fiberspot
 from fiberspot import example_script
 from skimage.segmentation import chan_vese
 
+
+def plot_segmentation(segmentation_result, image_array, plot_directory):
+    """
+    https://scikit-image.org/docs/dev/auto_examples/segmentation/plot_chan_vese.html#sphx-glr-auto-examples-segmentation-plot-chan-vese-py
+    """
+    fig, axes = plt.subplots(2, 2, figsize=(8, 8))
+    ax = axes.flatten()
+
+    ax[0].imshow(image_array, cmap="gray")
+    ax[0].set_axis_off()
+    ax[0].set_title("Original Image", fontsize=12)
+
+    ax[1].imshow(segmentation_result[0], cmap="gray")
+    ax[1].set_axis_off()
+    title = "Chan-Vese segmentation - {} iterations".format(len(segmentation_result[2]))
+    ax[1].set_title(title, fontsize=12)
+
+    ax[2].imshow(segmentation_result[1], cmap="gray")
+    ax[2].set_axis_off()
+    ax[2].set_title("Final Level Set", fontsize=12)
+
+    ax[3].plot(segmentation_result[2])
+    ax[3].set_title("Evolution of energy over iterations", fontsize=12)
+
+    fig.tight_layout()
+    path_picture = os.path.join(plot_directory, f"segmentation")
+    plt.savefig(path_picture + ".png")
+    plt.close(fig)
+
+
+path_this_files_dir = os.path.realpath(os.path.dirname(__file__))
+plot_directory = os.path.join(path_this_files_dir, "plots")
+
 arguments = example_script.arguments
 
 original = Image.open(arguments["specimen"]["path"])
@@ -29,25 +62,4 @@ segmentation_result = chan_vese(
     init_level_set="checkerboard",
     extended_output=True,
 )
-
-
-fig, axes = plt.subplots(2, 2, figsize=(8, 8))
-ax = axes.flatten()
-
-ax[0].imshow(image_array, cmap="gray")
-ax[0].set_axis_off()
-ax[0].set_title("Original Image", fontsize=12)
-
-ax[1].imshow(segmentation_result[0], cmap="gray")
-ax[1].set_axis_off()
-title = "Chan-Vese segmentation - {} iterations".format(len(segmentation_result[2]))
-ax[1].set_title(title, fontsize=12)
-
-ax[2].imshow(segmentation_result[1], cmap="gray")
-ax[2].set_axis_off()
-ax[2].set_title("Final Level Set", fontsize=12)
-
-ax[3].plot(segmentation_result[2])
-ax[3].set_title("Evolution of energy over iterations", fontsize=12)
-
-fig.tight_layout()
+plot_segmentation(segmentation_result, image_array, plot_directory)
