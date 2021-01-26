@@ -39,7 +39,7 @@ def plot_image(image, path):
 
 
 path_this_files_dir = os.path.realpath(os.path.dirname(__file__))
-plot_directory = os.path.join(path_this_files_dir, "plots", 's001')
+plot_directory = os.path.join(path_this_files_dir, "plots", "s001")
 
 arguments = example_script.arguments
 
@@ -69,6 +69,7 @@ available_filter_functions = {
     "mean_square": lambda x: skimage.filters.rank.mean(
         x, skimage.morphology.square(2 * radius)
     ),
+    "gaussian_skimage": lambda x: skimage.filters.gaussian(x, sigma=1),
 }
 
 # mean_values = {}
