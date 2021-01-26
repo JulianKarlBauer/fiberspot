@@ -11,21 +11,16 @@ import fiberspot
 from fiberspot import example_script
 from skimage.segmentation import chan_vese, morphological_chan_vese
 from skimage import segmentation
+from skimage import filters
 
 
-def plot_segmentation(segmentation_result, image_array, plot_directory):
+def plot_segmentation(image, plot_directory):
     """
     https://scikit-image.org/docs/dev/auto_examples/segmentation/plot_chan_vese.html#sphx-glr-auto-examples-segmentation-plot-chan-vese-py
     """
-    fig, axes = plt.subplots(2, 2, figsize=(8, 8))
-    ax = axes.flatten()
+    fig = plt.figure()
 
-    ax[0].imshow(image_array, cmap="gray")
-    ax[0].set_axis_off()
-    ax[0].set_title("Original Image", fontsize=12)
-
-    ax[1].imshow(segmentation_result, cmap="gray")
-    ax[1].set_axis_off()
+    plt.imshow(image)
 
     fig.tight_layout()
     path_picture = os.path.join(plot_directory, f"segmentation")
@@ -41,26 +36,9 @@ arguments = example_script.arguments
 original = Image.open(arguments["specimen"]["path"])
 specimen = original.crop(box=arguments["specimen"]["box"])
 specimen_grey = ImageOps.invert(specimen.convert("L"))
-image_array = img_as_float(specimen_grey)
-#
-# segmentation_result = chan_vese(
-#     image_array,
-#     mu=0.7,
-#     lambda1=1.1,
-#     lambda2=0.9,
-#     tol=1e-3,
-#     max_iter=200,
-#     dt=0.2,
-#     init_level_set="checkerboard",
-#     extended_output=True,
-# )
+image_array = np.array(specimen_grey)
 
-initial_level_set = np.zeros(image_array.shape)
-initial_level_set[[0, -1], :] = 1
-initial_level_set[:, [0, -1]] = 1
-segmentation_result = morphological_chan_vese(
-    image_array, 35, init_level_set=initial_level_set, smoothing=3
-)
+critical_value = filters.threshold_otsu(image_array)
+mask = np.array(specimen_grey) <= critical_value
 
-
-plot_segmentation(segmentation_result, image_array, plot_directory)
+plot_segmentation(image=mask, plot_directory=plot_directory)
