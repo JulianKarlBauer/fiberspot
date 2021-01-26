@@ -71,7 +71,7 @@ def plot_fiber_volume_fraction(fvc_map, plot_directory):
     )
     plt.plot(x, y)
     plt.xlabel("Grey value")
-    plt.ylabel("Fiber volume content")
+    plt.ylabel("Fiber volume fraction")
     plt.grid()
     plt.legend()
 

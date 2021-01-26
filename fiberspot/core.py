@@ -95,9 +95,7 @@ def get_local_fiber_volume_fraction(arguments):
 
     if plot:
         fiberspot.plotting.plot_image(
-            image=mask,
-            title="Fiber volume content",
-            path=os.path.join(directory, "mask" + ".png"),
+            image=mask, title="Mask", path=os.path.join(directory, "mask" + ".png"),
         )
 
     ########################################
@@ -159,7 +157,7 @@ def get_local_fiber_volume_fraction(arguments):
         if plot:
             fiberspot.plotting.plot_image(
                 image=fvc,
-                title="Fiber volume content",
+                title="Fiber volume fraction",
                 path=os.path.join(directory, "fvcs" + "_" + filter_key + ".png"),
             )
 
