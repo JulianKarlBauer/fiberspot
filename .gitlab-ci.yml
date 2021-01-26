@@ -6,13 +6,12 @@ install:
     image: "python:3.7"
     script:
         - python setup.py develop
-        - python s001.py
+        - pytest
         # - pip install pytest
         # - pytest --verbose
     artifacts:
         paths:
           - plots/
-          - output/
         expire_in: 2 days
 
 
