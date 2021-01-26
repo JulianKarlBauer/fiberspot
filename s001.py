@@ -39,7 +39,7 @@ def plot_image(image, path):
 
 
 path_this_files_dir = os.path.realpath(os.path.dirname(__file__))
-plot_directory = os.path.join(path_this_files_dir, "plots")
+plot_directory = os.path.join(path_this_files_dir, "plots", 's001')
 
 arguments = example_script.arguments
 
