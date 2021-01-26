@@ -35,10 +35,10 @@ distraction of radiation as e.g. x-rays.
 
 Optical measurements, i.e. images taken with conventional cameras, are
 
-- availabile
-- cheap
-- flexible
-- and offer high resolution.
+- Availabile
+- Cheap
+- Flexible
+- And offer high resolution.
 
 If a flat, shell-like specimen is illuminated from one side and the transmitted
 light intensity is measured by on optical sensor (camera) from the other side, we call
