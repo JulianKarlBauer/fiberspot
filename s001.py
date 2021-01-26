@@ -72,16 +72,16 @@ available_filter_functions = {
     "gaussian_skimage": lambda x: skimage.filters.gaussian(x, sigma=1),
 }
 
-# mean_values = {}
-# for filter_key, filter_function in available_filter_functions.items():
-#     mean_values[filter_key] = filter_function(image_array)
-#
-#     plot_image(
-#         image=mean_values[filter_key],
-#         path=os.path.join(plot_directory, "filter_" + filter_key),
-#     )
+mean_values = {}
+for filter_key, filter_function in available_filter_functions.items():
+    mean_values[filter_key] = filter_function(image_array)
 
-# skimage.filters.rank.mean(image_array, skimage.morphology.disk(radius))
+    plot_image(
+        image=mean_values[filter_key],
+        path=os.path.join(plot_directory, "filter_" + filter_key),
+    )
+
+skimage.filters.rank.mean(image_array, skimage.morphology.disk(radius))
 
 img = image_array
 blur = 3
@@ -119,7 +119,23 @@ weights = scipy.ndimage.filters.gaussian_filter(mask, sigma=blur)
 filter /= weights
 # after normalized convolution, you can choose to delete any data outside the mask:
 # filter *= mask
-filter_nonan = np.nan_to_num(filter, nan=0.0)
+# filter_nonan = np.nan_to_num(filter, nan=0.0)
+
+
+def my_filter(array):
+    radius = 60
+    return skimage.filters.rank.mean(array, skimage.morphology.square(2 * radius))
+
+
+def normalized_convolution_skimage(img, mask):
+    array = img_as_float(my_filter(img * mask))
+    weights = img_as_float(my_filter(mask))
+    array /= weights
+    return array
+
+
+normalized_skimage = normalized_convolution_skimage(img=img, mask=mask)
+
 
 for key, var in {
     "mask_moph_close_then_open": mask_moph_close_then_open,
@@ -129,12 +145,12 @@ for key, var in {
     "mask_close_02": mask_close_02,
     "mask_area_closing": mask_area_closing,
     "filter": filter,
+    "filter_normalized_skimage": normalized_skimage,
     "weights": weights,
     "img_times_mask": img_times_mask,
     "mask": mask,
     "img": img,
     "foulded": foulded,
-    "filter_nonan": filter_nonan,
 }.items():
     plot_image(
         image=var, path=os.path.join(plot_directory, "normalized_convolution", key)
