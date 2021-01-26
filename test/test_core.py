@@ -12,3 +12,8 @@ class Test_Core:
         box_shape = (box[3] - box[1], box[2] - box[0])
         for fvc_key, fvc in result["fiber_volume_content"].items():
             assert np.allclose(fvc.shape, box_shape)
+
+
+if __name__ == "__main__":
+    Test_Core().test_execute_example()
+    print('ash')
