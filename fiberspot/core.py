@@ -57,69 +57,30 @@ def plot_bands_of_image(path, box, plot_directory):
     plt.close(fig)
 
 
-def get_regular_grid_on_image(array):
-    n_x, n_y = 10, 10
-    l_y, l_x = array.shape
-    start_x, start_y = l_x / (2.0 * n_x), l_y / (2.0 * n_y)
-    end_x, end_y = l_x - start_x, l_y - start_y
-    x = np.linspace(start_x, end_x, n_x)
-    y = np.linspace(start_y, end_y, n_y)
-    xx, yy = np.meshgrid(x, y)
-    return xx, yy
-
-
-def plot_grid(array, grid_xx, grid_yy, plot_directory):
-    fig = plt.figure()
-    plt.imshow(array)
-    plt.scatter(grid_xx, grid_yy, marker="x", c="k")
-    plt.title("Grid points")
-
-    path_picture = os.path.join(plot_directory, f"grid")
-    plt.savefig(path_picture + ".png")
-    plt.tight_layout()
-    plt.close(fig)
-
-
 def plot_fiber_volume_content(fvc_map, plot_directory):
     fig = plt.figure()
     x = np.linspace(0, 256, 300)
     y = fvc_map(value=x)
+
+    args = dict(linewidth=4, markersize=12)
+
+    plt.plot(
+        fvc_map.average_grey,
+        fvc_map.average_volume_content,
+        "rs",
+        label="Average over specimen",
+        **args,
+    )
+    plt.plot(
+        fvc_map.neat_grey, fvc_map.neat_volume_content, "go", label="Neat resin", **args
+    )
     plt.plot(x, y)
     plt.xlabel("Grey value")
     plt.ylabel("Fiber volume content")
-    plt.title("Get fiber volume content from grey value")
+    plt.grid()
+    plt.legend()
 
     path_picture = os.path.join(plot_directory, f"fvc")
-    plt.savefig(path_picture + ".png")
-    plt.tight_layout()
-    plt.close(fig)
-
-
-def create_single_circular_mask(image_shape_2D, center=None, radius=None):
-    """This is highly inefficient and kind of stupid..."""
-    Y, X = np.ogrid[: image_shape_2D[0], : image_shape_2D[1]]
-    dist_from_center = np.sqrt((X - center[0]) ** 2 + (Y - center[1]) ** 2)
-
-    mask = dist_from_center <= radius
-    return mask
-
-
-def plot_mask(array, grid_xx, grid_yy, radius, plot_directory):
-    array_shape = array.shape[:2]
-    fig = plt.figure()
-    mask = np.full(array_shape, False)
-    for i in range(grid_xx.shape[0]):
-        for j in range(grid_xx.shape[1]):
-            mask = mask | create_single_circular_mask(
-                image_shape_2D=array_shape[:2],
-                center=(grid_xx[i, j], grid_yy[i, j]),
-                radius=radius,
-            )
-    tmp = array.copy()
-    tmp[~mask] = 0
-    plt.imshow(tmp)
-    plt.title("Use circular mask")
-    path_picture = os.path.join(plot_directory, f"mask")
     plt.savefig(path_picture + ".png")
     plt.tight_layout()
     plt.close(fig)
@@ -155,11 +116,11 @@ class LocalFiberVolumeContentMap:
 
 
 def get_local_fiber_volume_content(arguments):
-
-    directory = arguments["plot_directory"]
-    os.makedirs(directory, exist_ok=True)
-
     plot = arguments["plot"]
+
+    if plot:
+        directory = arguments["plot_directory"]
+        os.makedirs(directory, exist_ok=True)
 
     ########################################
     # Load image and reformat
@@ -178,26 +139,10 @@ def get_local_fiber_volume_content(arguments):
 
     image_arrays = {key: np.array(image) for key, image in images.items()}
 
-    # Plot
     if plot:
         fiberspot.plot_bands_of_image(
             path=arguments["specimen"]["path"],
             box=arguments["specimen"]["box"],
-            plot_directory=directory,
-        )
-
-    ########################################
-    # Grid
-    grid_xx, grid_yy = fiberspot.get_regular_grid_on_image(
-        array=image_arrays["specimen"]
-    )
-
-    # Plot
-    if plot:
-        fiberspot.plot_grid(
-            array=image_arrays["specimen"],
-            grid_xx=grid_xx,
-            grid_yy=grid_yy,
             plot_directory=directory,
         )
 
@@ -209,45 +154,38 @@ def get_local_fiber_volume_content(arguments):
         neat_grey=np.mean(image_arrays["neat_resin"]),
     )
 
-    # Plot
     if plot:
         fiberspot.plot_fiber_volume_content(fvc_map, plot_directory=directory)
 
     ########################################
-    # Create masks and calc local fiber volume content on specific areas
+    # Use filter to calc mean and map mean onto fiber volume content
 
     radius = arguments["radius"]
-    if plot:
-        fiberspot.plot_mask(
-            array=image_arrays["specimen"],
-            grid_xx=grid_xx,
-            grid_yy=grid_yy,
-            radius=radius,
-            plot_directory=directory,
-        )
 
-    mean_values_inside_masks = np.zeros_like(grid_xx)
-    fvc_inside_masks = np.zeros_like(grid_xx)
-    for i in range(10):
-        for j in range(10):
-            mask = fiberspot.create_single_circular_mask(
-                image_shape_2D=image_arrays["specimen"].shape[:2],
-                center=(grid_xx[i, j], grid_yy[i, j]),
-                radius=radius,
+    from PIL import ImageFilter
+
+    available_filters = {
+        "box": ImageFilter.BoxBlur(radius=radius),
+        "gaussian": ImageFilter.GaussianBlur(radius=radius),
+    }
+
+    mean_values = {}
+    fiber_volume_content = {}
+    for filter_key, filter in available_filters.items():
+
+        mean_values[filter_key] = mean = images["specimen"].filter(filter)
+        fiber_volume_content[filter_key] = fvc = fvc_map(np.array(mean))
+
+        if plot:
+            plot_image(
+                image=mean,
+                title="Mean values",
+                path=os.path.join(directory, "means" + "_" + filter_key + ".png"),
             )
-            mean = image_arrays["specimen"][mask].mean()
-            mean_values_inside_masks[i, j] = mean
-            fvc_inside_masks[i, j] = fvc_map(value=mean)
+            plot_image(
+                image=fvc,
+                title="Fiber volume content",
+                path=os.path.join(directory, "fvcs" + "_" + filter_key + ".png"),
+            )
 
-    if plot:
-        fiberspot.plot_image(
-            image=mean_values_inside_masks,
-            title="Mean values",
-            path=os.path.join(directory, "means" + ".png"),
-        )
-        fiberspot.plot_image(
-            image=fvc_inside_masks,
-            title="Fiber volume content",
-            path=os.path.join(directory, "fvcs" + ".png"),
-        )
-    return fvc_inside_masks
+    return {"mean": mean_values, "fiber_volume_content": fiber_volume_content}
