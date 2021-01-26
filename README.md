@@ -1,3 +1,7 @@
+[![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![LICENSE](https://black.readthedocs.io/en/stable/_static/license.svg)](https://raw.github.com/nilsmeyerkit/fiberoripy/master/LICENSE)
+
+
 # fiberspot
 
 Identify fiber properties on 2D optical images.  
@@ -69,7 +73,7 @@ Inverted light intensity, i.e. darkness:
 
 ![X-y plot of fiber volume content over grey value with two special point pairs: Average specimen and neat resin](doc/example_fiber_volume_content.png)
 
-## Installation and Usage
+## Installation
 
 - Clone the git-project to your machine
 	```shell
