@@ -159,8 +159,7 @@ def get_local_fiber_volume_content(arguments):
         fiberspot.plot_fiber_volume_content(fvc_map, plot_directory=directory)
 
     ########################################
-    # Use filter to calc mean and map mean onto fiber volume content
-
+    # Define bunch of filters
     radius = arguments["radius"]
 
     available_filters = {
@@ -168,12 +167,12 @@ def get_local_fiber_volume_content(arguments):
         "gaussian": ImageFilter.GaussianBlur(radius=radius),
     }
 
+    ########################################
+    # Use filter to calc mean
     mean_values = {}
-    fiber_volume_content = {}
     for filter_key, filter in available_filters.items():
 
         mean_values[filter_key] = mean = images["specimen"].filter(filter)
-        fiber_volume_content[filter_key] = fvc = fvc_map(np.array(mean))
 
         if plot:
             plot_image(
@@ -181,6 +180,17 @@ def get_local_fiber_volume_content(arguments):
                 title="Mean values",
                 path=os.path.join(directory, "means" + "_" + filter_key + ".png"),
             )
+
+    ########################################
+    # Map mean onto fiber volume content
+    fiber_volume_content = {}
+    for filter_key, filter in available_filters.items():
+
+        fiber_volume_content[filter_key] = fvc = fvc_map(
+            np.array(mean_values[filter_key])
+        )
+
+        if plot:
             plot_image(
                 image=fvc,
                 title="Fiber volume content",
