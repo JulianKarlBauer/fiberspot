@@ -25,4 +25,5 @@ jobs:
       run: |
         pip install pytest
         pip install pytest-cov
+        python setup.py develop
         pytest --verbose
