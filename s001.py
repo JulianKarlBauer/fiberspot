@@ -26,6 +26,7 @@ def plot_image(image, path):
     """
     https://scikit-image.org/docs/dev/auto_examples/segmentation/plot_chan_vese.html#sphx-glr-auto-examples-segmentation-plot-chan-vese-py
     """
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     fig = plt.figure()
 
     plt.imshow(image)
@@ -70,17 +71,72 @@ available_filter_functions = {
     ),
 }
 
-mean_values = {}
-for filter_key, filter_function in available_filter_functions.items():
-    mean_values[filter_key] = filter_function(image_array)
+# mean_values = {}
+# for filter_key, filter_function in available_filter_functions.items():
+#     mean_values[filter_key] = filter_function(image_array)
+#
+#     plot_image(
+#         image=mean_values[filter_key],
+#         path=os.path.join(plot_directory, "filter_" + filter_key),
+#     )
+
+# skimage.filters.rank.mean(image_array, skimage.morphology.disk(radius))
+
+img = image_array
+blur = 3
+
+area_threshold = 500
+mask_morph_closing = skimage.morphology.area_closing(
+    mask, area_threshold=60  # , selem=skimage.morphology.square(1)
+)
+mask_moph_close_then_open = skimage.morphology.opening(
+    mask_morph_closing, selem=skimage.morphology.square(20)
+)
+
+mask_morph_opening = skimage.morphology.opening(mask)
+
+mask_area_closing = ~skimage.morphology.area_closing(
+    ~mask, area_threshold=area_threshold
+)
+mask_close_01 = ~skimage.morphology.remove_small_holes(
+    ~mask, area_threshold=area_threshold
+)
+mask_close_02 = skimage.morphology.remove_small_holes(
+    mask_close_01, area_threshold=area_threshold
+)
+mask = mask_moph_close_then_open.astype(float)
+
+img = image_array.astype(float)
+
+# normalized convolution of image with mask
+img_times_mask = img * mask
+filter = scipy.ndimage.filters.gaussian_filter(img * mask, sigma=blur)
+foulded = filter.copy()
+weights = scipy.ndimage.filters.gaussian_filter(mask, sigma=blur)
+filter /= weights
+# after normalized convolution, you can choose to delete any data outside the mask:
+# filter *= mask
+filter_nonan = np.nan_to_num(filter, nan=0.0)
+
+for key, var in {
+    "mask_moph_close_then_open": mask_moph_close_then_open,
+    "mask_morph_closing": mask_morph_closing,
+    "mask_morph_opening": mask_morph_opening,
+    "mask_close_01": mask_close_01,
+    "mask_close_02": mask_close_02,
+    "mask_area_closing": mask_area_closing,
+    "filter": filter,
+    "weights": weights,
+    "img_times_mask": img_times_mask,
+    "mask": mask,
+    "img": img,
+    "foulded": foulded,
+    "filter_nonan": filter_nonan,
+}.items():
     plot_image(
-        image=mean_values[filter_key],
-        path=os.path.join(plot_directory, "filter_" + filter_key),
+        image=var, path=os.path.join(plot_directory, "normalized_convolution", key)
     )
 
-import skimage
-
-skimage.filters.rank.mean(image_array, skimage.morphology.disk(radius))
 
 # mean_values = {}
 # for filter_key, filter in available_filters.items():
