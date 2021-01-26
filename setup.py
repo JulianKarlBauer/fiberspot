@@ -12,7 +12,14 @@ setuptools.setup(
     url="https://git.scc.kit.edu/julian_/fiberspot",
     packages=["fiberspot"],
     package_dir={"fiberspot": "fiberspot"},
-    install_requires=["numpy", "matplotlib", "pillow", "scipy", "pytest", "skimage"],
+    install_requires=[
+        "numpy",
+        "matplotlib",
+        "pillow",
+        "scipy",
+        "pytest",
+        "scikit-image",
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
