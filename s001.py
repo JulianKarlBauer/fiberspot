@@ -106,7 +106,9 @@ mask_close_02 = skimage.morphology.remove_small_holes(
 )
 mask = mask_moph_close_then_open.astype(float)
 
-img = image_array.astype(float)
+# img = image_array.astype(float)
+img = img_as_float(image_array)
+
 
 # normalized convolution of image with mask
 img_times_mask = img * mask
