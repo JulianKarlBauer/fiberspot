@@ -19,7 +19,7 @@ See [license](https://github.com/JulianKarlBauer/fiberspot/blob/main/LICENSE) an
 
 ## Local Fiber Volume Content
 
-The algorithm described here is simple, almost naive.
+The algorithm described here is very simple.
 Applicability is not proven and potential problems are discussed below.
 
 ### Motivation
