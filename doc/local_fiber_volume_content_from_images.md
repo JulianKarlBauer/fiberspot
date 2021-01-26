@@ -39,7 +39,7 @@ Thoughts on practical implementation
 
 - Homogeneous lightning conditions
 - Use complete range of light intensity of camera
-- lower bound for eat resin (watch specimen thickness)
+- lower bound for neat resin (watch specimen thickness)
 - Coordinate system identical to other measurements
   - Do not rotate specimen relative to placement in DIC and...
   - Mark specimen axis (Think about misalignment of camera relative to specimen plane)
