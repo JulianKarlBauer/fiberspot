@@ -111,7 +111,7 @@ fields of volume fraction using different filter algorithms:
 
 Original Image
 
-![Image of fiber reinforced specimen with hair cross](data/specimen.png)
+![Image of fiber reinforced specimen with hair cross](doc/specimen.png)
 
 Gaussian filter with radius 60pixel
 

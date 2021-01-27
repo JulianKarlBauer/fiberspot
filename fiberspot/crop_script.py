@@ -24,6 +24,6 @@ decreased_resolution = resize(
 grey = color.rgb2gray(cropped)
 
 io.imsave(
-    os.path.join(os.path.dirname(path_this_files_dir), "data", "specimen" + ".png",),
+    os.path.join(os.path.dirname(path_this_files_dir), "doc", "specimen" + ".png",),
     decreased_resolution,
 )
