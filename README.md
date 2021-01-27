@@ -6,14 +6,19 @@
 # fiberspot
 
 Identify fiber properties on 2D optical images.  
-See [license](https://github.com/JulianKarlBauer/fiberspot/blob/main/LICENSE) and cite as
+See [license](https://github.com/JulianKarlBauer/fiberspot/blob/main/LICENSE) and
+[cite as](https://zenodo.org/record/4471261/export/hx#.YBFCgtYo-Ts)
 
 ```bibtex
-@manual{fiberspot,
-	title        = {fiberspot},
-	author       = {Julian Karl Bauer},
-	year         = {2021},
-	url          = {https://github.com/JulianKarlBauer/fiberspot},
+@software{juliankarlbauer_2021_4471261,
+  author       = {JulianKarlBauer},
+  title        = {JulianKarlBauer/fiberspot: Prototype},
+  month        = jan,
+  year         = 2021,
+  publisher    = {Zenodo},
+  version      = {v0.0.1},
+  doi          = {10.5281/zenodo.4471261},
+  url          = {https://doi.org/10.5281/zenodo.4471261}
 }
 ```
 
@@ -22,11 +27,12 @@ If you have data sets you would like to analyze, please contact me or
 think about opening an issue.
 
 **[Additional features](#unpublished-features)**:
- are already available in a private project, e.g.
-- Masking features inside an image by image segmentation
-- Weighted / normalized convolution filtering 
+are already available in a private project, e.g.
 
---------------------------------------------------
+- Masking features inside an image by image segmentation
+- Weighted / normalized convolution filtering
+
+---
 
 ## Local Fiber Volume fraction
 
@@ -34,6 +40,7 @@ The algorithm described here is very simple.
 Applicability is not proven and potential problems are discussed below.
 
 ### Motivation
+
 Local fiber volume fraction is the fiber orientation information of zeroth order.
 Spatial variance of fiber volume fraction is an inherent property of inhomogeneous
 materials.
@@ -71,8 +78,8 @@ An example are some glass fiber reinforced thermosets.
 
 - Identify linear mapping between local fiber volume fraction and light intensity
   from the following two measurements:
-	1. Light intensity in specific region with fiber volume fraction equals zero, i.e.  without fibers
-	2. Average light intensity of specimen correlating with average volume fiber fraction of the specimen
+  	1. Light intensity in specific region with fiber volume fraction equals zero, i.e. without fibers
+  	2. Average light intensity of specimen correlating with average volume fiber fraction of the specimen
 
 Inverted light intensity, i.e. darkness:
 
@@ -98,6 +105,7 @@ Inverted light intensity, i.e. darkness:
 Note: [Develop vs. install](https://stackoverflow.com/a/19048754/8935243)
 
 ## Usage
+
 See [example script](fiberspot/example_script.py) generating
 fields of volume fraction using different filter algorithms:
 
@@ -108,8 +116,6 @@ Box mean with radius 60pixel
 ![Fiber volume fraction as colomap using box filter](doc/fvfs_box_PIL.png)
 
 ## Unpublished Features
+
 Skimage mean filter using disk area with radius 60pixel and masked hair cross.
 ![Fiber volume fraction as colomap using box filter](doc/fvfs_mean_disk_skimage_masked.png)
-
-
-
