@@ -77,7 +77,9 @@ An example are some glass fiber reinforced thermosets.
 ### Algorithm
 
 - Identify linear mapping between local fiber volume fraction and light intensity
-  from the following two measurements: 1. Light intensity in specific region with fiber volume fraction equals zero, i.e. without fibers 2. Average light intensity of specimen correlating with average volume fiber fraction of the specimen
+  from the following two measurements:
+  	1. Light intensity in specific region with fiber volume fraction equals zero, i.e. without fibers
+  	2. Average light intensity of specimen correlating with average volume fiber fraction of the specimen
 
 Inverted light intensity, i.e. darkness:
 
@@ -92,9 +94,13 @@ Inverted light intensity, i.e. darkness:
 ## Installation
 
 - Clone the git-project to your machine
-  `shell git clone`
+	```shell
+	git clone 
+	```
 - Install the package from local repository into current environment in develop mode:
-  `shell python setup.py develop`
+	```shell
+	python setup.py develop
+	```
 
 Note: [Develop vs. install](https://stackoverflow.com/a/19048754/8935243)
 
