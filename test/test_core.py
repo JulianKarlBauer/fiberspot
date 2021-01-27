@@ -4,13 +4,11 @@ import numpy as np
 
 
 class Test_Core:
-    def test_execute_example(
-        self,
-    ):
+    def test_execute_example(self,):
         arguments = example_script.arguments
-        result = fiberspot.get_local_fiber_volume_fraction(arguments=arguments)
+        result = fiberspot.get_local_fiber_volume_fraction_from_images(**arguments)
 
-        box = arguments["specimen"]["box"]
+        box = arguments["image_paths_and_boxes"]["specimen"]["box"]
         box_shape = (box[3] - box[1], box[2] - box[0])
         for fvf_key, fvf in result["fiber_volume_fraction"].items():
             assert np.allclose(fvf.shape, box_shape)
