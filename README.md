@@ -109,13 +109,20 @@ Note: [Develop vs. install](https://stackoverflow.com/a/19048754/8935243)
 See [example script](fiberspot/example_script.py) generating
 fields of volume fraction using different filter algorithms:
 
+Original Image
+
+![Image of fiber reinforced specimen with hair cross](data/specimen.png)
+
 Gaussian filter with radius 60pixel
+
 ![Fiber volume fraction as colomap using box filter](doc/fvfs_gaussian_PIL.png)
 
 Box mean with radius 60pixel
+
 ![Fiber volume fraction as colomap using box filter](doc/fvfs_box_PIL.png)
 
 ## Unpublished Features
 
 Skimage mean filter using disk area with radius 60pixel and masked hair cross.
+
 ![Fiber volume fraction as colomap without hair cross visible in previous images](doc/fvfs_mean_disk_skimage_masked.png)
