@@ -108,7 +108,7 @@ Box mean with radius 60pixel
 ![Fiber volume fraction as colomap using box filter](doc/fvfs_box_PIL.png)
 
 ## Unpublished Features
-Skimage mean filter using disk area with radius 60pixel and masking hair cross.
+Skimage mean filter using disk area with radius 60pixel and masked hair cross.
 ![Fiber volume fraction as colomap using box filter](doc/fvfs_mean_disk_skimage_masked.png)
 
 
