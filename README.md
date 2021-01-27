@@ -1,7 +1,7 @@
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![LICENSE](https://black.readthedocs.io/en/stable/_static/license.svg)](https://raw.github.com/nilsmeyerkit/fiberoripy/master/LICENSE)
 ![Python package](https://github.com/JulianKarlBauer/fiberspot_private/workflows/Python%20package/badge.svg)
-
+[![DOI](https://zenodo.org/badge/333071299.svg)](https://zenodo.org/badge/latestdoi/333071299)
 
 # fiberspot
 
@@ -108,7 +108,7 @@ Box mean with radius 60pixel
 ![Fiber volume fraction as colomap using box filter](doc/fvfs_box_PIL.png)
 
 ## Unpublished Features
-Skimage mean filter using disk area with radius 60pixel and masking hair cross.
+Skimage mean filter using disk area with radius 60pixel and masked hair cross.
 ![Fiber volume fraction as colomap using box filter](doc/fvfs_mean_disk_skimage_masked.png)
 
 
