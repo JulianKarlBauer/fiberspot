@@ -16,6 +16,16 @@ See [license](https://github.com/JulianKarlBauer/fiberspot/blob/main/LICENSE) an
 	url          = {https://github.com/JulianKarlBauer/fiberspot},
 }
 ```
+
+**Call for application**:
+If you have data sets you would like to analyze, please contact me or
+think about opening an issue.
+
+**[Additional features](#unpublished-features)**:
+ are already available in a private project, e.g.
+- Masking features inside an image by image segmentation
+- Weighted / normalized convolution filtering 
+
 --------------------------------------------------
 
 ## Local Fiber Volume fraction
@@ -89,11 +99,17 @@ Note: [Develop vs. install](https://stackoverflow.com/a/19048754/8935243)
 
 ## Usage
 See [example script](fiberspot/example_script.py) generating
+fields of volume fraction using different filter algorithms:
 
 Gaussian filter with radius 60pixel
 ![Fiber volume fraction as colomap using box filter](doc/fvfs_gaussian_PIL.png)
 
 Box mean with radius 60pixel
 ![Fiber volume fraction as colomap using box filter](doc/fvfs_box_PIL.png)
+
+## Unpublished Features
+Skimage mean filter using disk area with radius 60pixel and masking hair cross.
+![Fiber volume fraction as colomap using box filter](doc/fvfs_mean_disk_skimage_masked.png)
+
 
 
