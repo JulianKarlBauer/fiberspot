@@ -110,6 +110,7 @@ class LocalFiberVolumeFractionMap:
 
 
 def normalized_convolution_skimage(img, mask, filter_function):
+    """Thanks to https://stackoverflow.com/a/59685920/8935243"""
     img = skimage.img_as_float(img)
     mask = skimage.img_as_float(mask)
     array = skimage.img_as_float(filter_function(skimage.img_as_ubyte(img * mask)))
