@@ -7,7 +7,7 @@ setuptools.setup(
     name="fiberspot",
     version="0.0.1",
     author="Julian Bauer",
-    author_email="julian.bauer@kit.edu",
+    author_email="juliankarlbauer@gmx.de",
     description="Spot fiber properties on 2D optical images",
     url="https://git.scc.kit.edu/julian_/fiberspot",
     packages=["fiberspot"],
