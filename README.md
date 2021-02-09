@@ -36,7 +36,7 @@ are already available in a private project, e.g.
 
 ## Local Fiber Volume fraction
 
-The algorithm described here is very simple.
+The algorithm described here is very simple and has been developed in cooperation with Juliane Lang.
 Applicability is not proven and potential problems are discussed below.
 
 ### Motivation
