@@ -135,5 +135,7 @@ The research documented in this repository has been funded by the German Researc
 International Research Training Group [“Integrated engineering of continuous-discontinuous long fiber reinforced polymer structures“ (GRK 2078)][grk_website].
 The support by the [German Research Foundation (DFG)][dfg_website] is gratefully acknowledged.
 
+Supply of the example image by Juliane Lang is gratefully acknowledged.
+
 [grk_website]: https://www.grk2078.kit.edu/
 [dfg_website]: https://www.dfg.de/
