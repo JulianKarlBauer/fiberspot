@@ -126,3 +126,12 @@ Box mean with radius 60pixel
 Skimage mean filter using disk area with radius 60pixel and masked hair cross.
 
 ![Fiber volume fraction as colomap without hair cross visible in previous images](doc/fvfs_mean_disk_skimage_masked.png)
+
+## Acknowledgment
+
+The research documented in this repository has been funded by the German Research Foundation (DFG) within the 
+International Research Training Group [“Integrated engineering of continuous-discontinuous long fiber reinforced polymer structures“ (GRK 2078)][grk_website].
+The support by the [German Research Foundation (DFG)][dfg_website] is gratefully acknowledged.
+
+[grk_website]: https://www.grk2078.kit.edu/
+[dfg_website]: https://www.dfg.de/
