@@ -6,7 +6,9 @@
 # fiberspot
 
 Identify fiber properties on 2D optical images.  
-See [license](https://github.com/JulianKarlBauer/fiberspot/blob/main/LICENSE) and
+See [license](https://github.com/JulianKarlBauer/fiberspot/blob/main/LICENSE),
+[acknowledgment](#acknowledgment)
+and
 [cite as](https://zenodo.org/record/4471261/export/hx#.YBFCgtYo-Ts)
 
 ```bibtex
