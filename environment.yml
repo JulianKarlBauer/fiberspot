@@ -1,4 +1,4 @@
-name: fiberspot_p
+name: fiberspot
 channels:
   - anaconda
   - conda-forge
@@ -140,4 +140,4 @@ dependencies:
     - regex==2020.11.13
     - typed-ast==1.4.2
     - typing-extensions==3.7.4.3
-prefix: /home/julian/miniconda3/envs/fiberspot_p
+prefix: /home/julian/miniconda3/envs/fiberspot
