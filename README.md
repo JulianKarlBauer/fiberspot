@@ -97,7 +97,7 @@ Inverted light intensity, i.e. darkness:
 
 - Clone the git-project to your machine
 	```shell
-	git clone 
+	git clone
 	```
 - Install the package from local repository into current environment in develop mode:
 	```shell
@@ -131,7 +131,7 @@ Skimage mean filter using disk area with radius 60pixel and masked hair cross.
 
 ## Acknowledgment
 
-The research documented in this repository has been funded by the German Research Foundation (DFG) within the 
+The research documented in this repository has been funded by the German Research Foundation (DFG) within the
 International Research Training Group [“Integrated engineering of continuous-discontinuous long fiber reinforced polymer structures“ (GRK 2078)][grk_website].
 The support by the [German Research Foundation (DFG)][dfg_website] is gratefully acknowledged.
 
