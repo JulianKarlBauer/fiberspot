@@ -43,8 +43,8 @@ plot_directory = os.path.join(path_this_files_dir, "plots", "s001")
 
 arguments = example_script.arguments
 
-original = Image.open(arguments["specimen"]["path"])
-specimen = original.crop(box=arguments["specimen"]["box"])
+original = Image.open(arguments["image_paths_and_boxes"]["specimen"]["path"])
+specimen = original.crop(box=arguments["image_paths_and_boxes"]["specimen"]["box"])
 specimen_grey = ImageOps.invert(specimen.convert("L"))
 image_array = np.array(specimen_grey)
 
