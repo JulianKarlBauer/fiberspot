@@ -117,11 +117,11 @@ Original Image
 
 Gaussian filter with radius 60pixel
 
-![Fiber volume fraction as colomap using box filter](doc/fvfs_gaussian_PIL.png)
+![Fiber volume fraction as colormap using box filter](doc/fvfs_gaussian_PIL.png)
 
 Box mean with radius 60pixel
 
-![Fiber volume fraction as colomap using box filter](doc/fvfs_box_PIL.png)
+![Fiber volume fraction as colormap using box filter](doc/fvfs_box_PIL.png)
 
 ## Unpublished Features
 
