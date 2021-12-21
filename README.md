@@ -1,14 +1,17 @@
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![LICENSE](https://black.readthedocs.io/en/stable/_static/license.svg)](https://raw.github.com/nilsmeyerkit/fiberoripy/master/LICENSE)
-![Python package](https://github.com/JulianKarlBauer/fiberspot_private/workflows/Python%20package/badge.svg)
 [![DOI](https://zenodo.org/badge/333071299.svg)](https://zenodo.org/badge/latestdoi/333071299)
 
-# fiberspot
+# fiberspot: Local Fiber Volume fraction
 
-Identify fiber properties on 2D optical images.  
+Identify local [fiber volume content][url_fiber_volume_content] of flat thin fiber reinforced composites
+based on 2D optical images.
+The algorithm described here is very simple and has been developed in cooperation with Juliane Lang within the [DFG][dfg_website]-project [IRTG2078][grk_website].
+Applicability is not proven and potential problems are discussed below.
+
 See [license](https://github.com/JulianKarlBauer/fiberspot/blob/main/LICENSE),
 [acknowledgment](#acknowledgment)
-and
+and please
 [cite as](https://zenodo.org/record/4471261/export/hx#.YBFCgtYo-Ts)
 
 ```bibtex
@@ -28,18 +31,6 @@ and
 If you have data sets you would like to analyze, please contact me or
 think about opening an issue.
 
-**[Additional features](#unpublished-features)**:
-are already available in a private project, e.g.
-
-- Masking features inside an image by image segmentation
-- Weighted / normalized convolution filtering
-
----
-
-## Local Fiber Volume fraction
-
-The algorithm described here is very simple and has been developed in cooperation with Juliane Lang.
-Applicability is not proven and potential problems are discussed below.
 
 ### Motivation
 
@@ -76,6 +67,11 @@ An example are some glass fiber reinforced thermosets.
 - Identification of lower bound for neat resin (watch specimen thickness)
 - Identification of local coordinate system
 
+### Solved Challenges:
+
+- Masking features inside an image by image segmentation
+- Weighted / normalized convolution filtering
+
 ### Algorithm
 
 - Identify linear mapping between local fiber volume fraction and light intensity
@@ -108,26 +104,19 @@ Note: [Develop vs. install](https://stackoverflow.com/a/19048754/8935243)
 
 ## Usage
 
-See [example script](fiberspot/example_script.py) generating
-fields of volume fraction using different filter algorithms:
+See the [example script](fiberspot/example_script.py)
+which identifies a field of the local fiber volume fraction
+using various filter algorithms:
 
 Original Image
 
 ![Image of fiber reinforced specimen with hair cross](doc/specimen.png)
 
-Gaussian filter with radius 60pixel
-
-![Fiber volume fraction as colormap using box filter](doc/fvfs_gaussian_PIL.png)
-
-Box mean with radius 60pixel
-
-![Fiber volume fraction as colormap using box filter](doc/fvfs_box_PIL.png)
-
-## Unpublished Features
-
-Skimage mean filter using disk area with radius 60pixel and masked hair cross.
+Application of the skimage mean filter with disk area and a radius of 60pixel
+combined with normalized convolution filtering masking the hair cross yields
 
 ![Fiber volume fraction as colomap without hair cross visible in previous images](doc/fvfs_mean_disk_skimage_masked.png)
+
 
 ## Acknowledgment
 
@@ -139,3 +128,5 @@ Supply of the example image by Juliane Lang is gratefully acknowledged.
 
 [grk_website]: https://www.grk2078.kit.edu/
 [dfg_website]: https://www.dfg.de/
+[url_fiber_volume_content]: https://en.wikipedia.org/wiki/Fiber_volume_ratio
+
