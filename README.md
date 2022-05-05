@@ -120,13 +120,17 @@ combined with normalized convolution filtering masking the hair cross yields
 
 ## Acknowledgment
 
-The research documented in this repository has been funded by the German Research Foundation (DFG) within the
-International Research Training Group [“Integrated engineering of continuous-discontinuous long fiber reinforced polymer structures“ (GRK 2078)][grk_website].
-The support by the [German Research Foundation (DFG)][dfg_website] is gratefully acknowledged.
+The research documented in this repository has been funded by the 
+[German Research Foundation (DFG, Deutsche Forschungsgemeinschaft)][dfg_website] - project number [255730231][dfg_project].
+The support by the German Research Foundation within the International Research Training Group 
+[“Integrated engineering of continuous-discontinuous long fiber reinforced polymer structures“ (GRK 2078)][grk_website]
+is gratefully acknowledged.
 
 Supply of the example image by Juliane Lang is gratefully acknowledged.
 
 [grk_website]: https://www.grk2078.kit.edu/
 [dfg_website]: https://www.dfg.de/
+[dfg_project]: https://gepris.dfg.de/gepris/projekt/255730231
+
 [url_fiber_volume_content]: https://en.wikipedia.org/wiki/Fiber_volume_ratio
 
